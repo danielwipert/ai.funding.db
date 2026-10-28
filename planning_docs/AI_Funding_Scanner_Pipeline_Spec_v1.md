@@ -59,9 +59,9 @@ EDGAR Form D is the only primary source; everything else enriches a name EDGAR a
 | LinkedIn company page | Enrichment, optional | Headcount band, HQ | Blocks scraping; manual lookup only | Manual |
 | Crunchbase / newsletter deal lists | Validation only | A weekly list of announced rounds to measure recall against | Lags EDGAR by days to weeks | Free tier |
 
-Two Form D fields do most of the pre-filtering. **Industry Group** keeps `Other Technology` and `Business Services` and drops `Real Estate`, `Oil and Gas`, `Banking`, `Pooled Investment Fund` and the rest (funds file Form D constantly and are the largest source of noise). **Total Offering Amount** keeps $1M–$50M. Both are structural fields, so they never need a model.
+Two Form D fields do most of the pre-filtering. **Industry Group** keeps `Other Technology` and `Business Services` and drops `Real Estate`, `Oil and Gas`, `Banking`, `Pooled Investment Fund` and the rest (funds file Form D constantly and are the largest source of noise). **Amount Sold** keeps $1M–$50M (`offering_total` can be a placeholder, so it is not used). Both are structural fields, so they never need a model.
 
-Open question for Dan: does the output need non-US companies? Form D only covers US issuers; adding UK/EU means Companies House or Dealroom, a different build.
+Geography is US only for v1 (decision 10). Form D only covers US issuers; adding UK/EU means Companies House or Dealroom, a different build.
 
 ## Pipeline stages
 
@@ -103,7 +103,7 @@ Two fields come from outside the pipeline and are merged at build time from `tra
 Five mechanisms keep false positives near zero. They are the same ones in the AI Operations Specification, applied to a one-person pipeline.
 
 1. **Evidence or nothing.** The classifier sees only `evidence_text` from the company's own homepage plus the search snippet. No homepage found means `uncertain`, never a guess from the company name. A name like "Foo AI Inc" is not evidence.
-2. **Generator/verifier separation.** Model A classifies with the rubric. Model B, a different provider, sees the same evidence and a differently worded prompt that asks it to argue the company is *not* an AI company, then give a verdict. Only two `yes` verdicts ship. Disagreement goes to review.
+2. **Generator/verifier separation.** Model A classifies with the rubric. Model B, an open-weight model from a different model family, sees the same evidence and a differently worded prompt that asks it to argue the company is *not* an AI company, then give a verdict. Only two `yes` verdicts ship. Disagreement goes to review.
 3. **Confidence floor.** Either model under 0.8 confidence routes to review regardless of label.
 4. **Golden set.** Before the first real run, hand-label 60 filings: 20 clear AI, 20 clear non-AI, 20 hard cases (bolted-on AI, consultancies, robotics). Every rubric or prompt change is re-run against this set and must hold precision ≥ 95% before it ships. The set grows from review decisions.
 5. **Weekly audit.** After each run, 20 output rows are sampled and checked by hand against the homepage. Any false positive gets a postmortem line: which stage let it through, and what rubric or filter change prevents the class of error. The fix is a new golden-set example, not a one-off patch.
@@ -127,13 +127,13 @@ The output is a dashboard on GitHub Pages: one newest-first table, sortable and 
 
 **Merge rule:** a company already in `data.json` keeps its row; a later Form D for the same CIK updates `amount_sold` and sets `last_updated` only when the amount rose. Contacted and note are never touched by the pipeline. Polish level is clean and functional: good type, sortable columns, filters on state, amount, contacted; no summary header, no detail panel in v1.
 
-**Cadence:** a GitHub Actions workflow runs the pipeline every Monday 6am CT on the prior 7 days and commits `data.json`; Pages redeploys on the commit. A `workflow_dispatch` input `since` allows a one-off backfill (the last 90 days, run once to seed the dashboard). Secrets (model API keys) live in repository secrets, never in the repo.
+**Cadence:** a GitHub Actions workflow runs the pipeline every Monday 6am CT on the prior 7 days and commits `data.json`; Pages redeploys on the commit. A `workflow_dispatch` input `since` allows a one-off backfill (the last 90 days, run once to seed the dashboard). Secrets (the model-hosting API key) live in repository secrets, never in the repo.
 
 ## Build plan
 
 Ten steps, in order, each ending with something that runs. No step opens until the one before it produces a file you can look at. Estimated 13–17 hours total; steps 1–4 are the first day. The repo is created in step 0 so every later step commits into it.
 
-- [ ] **Step 0 — Repo (30 min).** Create the GitHub repo with `pipeline/`, `dashboard/`, `tracking.yml`, `runs/` (gitignored except summaries), `requirements.txt`. Enable Pages from the `dashboard/` folder. Done when a placeholder `index.html` is live at the Pages URL.
+- [ ] **Step 0 — Repo (30 min).** Create the GitHub repo with `pipeline/`, `dashboard/`, `tracking.yml`, `runs/` (gitignored except summaries), `requirements.txt`. Make the repo public and publish `dashboard/` to Pages through a deploy workflow (Pages cannot serve a `dashboard/` folder directly). Done when a placeholder `index.html` is live at the Pages URL.
 - [ ] **Step 1 — Pull (1 hr).** `pull.py`: hit the EDGAR full-text search for `forms=D` over a date range, page through results, write `01_filings.jsonl` with accession, CIK, name, filing date. Done when a 7-day pull returns a few hundred rows and a re-run is idempotent.
 - [ ] **Step 2 — Parse (2 hrs).** `parse.py`: fetch each filing's `primary_doc.xml`, map the fields in the data model, respect the rate limit, cache every XML locally. Done when every row has amount, industry group, state, and related persons, and a second run fetches nothing new.
 - [ ] **Step 3 — Structural filter (30 min).** `filter.py`: apply industry group, amount band, amendment rule. Write `drop_reason` on every dropped row. Done when the survivor count is 30–80 for a 7-day window and spot-checking 10 drops shows no AI company among them.
@@ -149,15 +149,15 @@ Order matters at one point: the golden set (step 4) comes before the classifier 
 
 ## Open decisions
 
-Four choices still change the build. The sheet-location question is resolved (GitHub Pages, see the decision log). Confirm or override the rest before step 1.
+All resolved by logic gate on 2026-10-28 (decisions 9–13 in the decision log). The table keeps the original options for reference.
 
-| Decision | Options | Recommended default | Why |
+| Decision | Options | Chosen | Why |
 | --- | --- | --- | --- |
 | Time window | 7 / 14 / 30 days per run | 7 days, weekly, plus a one-time 90-day backfill | Matches the Sunday/Monday cadence; backfill seeds the dashboard on day one |
 | Geography | US only (Form D) vs. add UK/EU | US only for v1 | Form D is free and structural; EU sources are a second build |
 | Amount band | $1–50M vs. wider | $1–50M on `amount_sold` | Under $1M is friends-and-family; over $50M is past the created-role window |
-| Models A and B | Which two providers | Two different providers, cheap tier for both | Verifier independence matters more than either model's strength; cost stays under $5/week |
-| Repo visibility | Public (free Pages) vs. private (GitHub Pro, \~$4/mo) | Private | The dashboard carries founder names and your outreach notes |
+| Models A and B | Which two providers | Two open-weight models from different families, through one hosting service (e.g. OpenRouter); exact models picked in step 6 | Good results at a low price; different families keep the verifier independent; one key, one code path |
+| Repo visibility | Public (free Pages) vs. private (GitHub Pro, \~$4/mo) | Public, notes included | Free Pages and Actions; Pages is public even on a private repo, so private bought little. Accepted: `tracking.yml` notes and their git history are public |
 
 One more decision is not the pipeline's: **what happens to the output.** The dashboard produces candidates; the three-company outreach already scoped is still the first thing to send. The pipeline is the weekly feed behind it, not a reason to wait.
 
@@ -175,3 +175,8 @@ Decisions made by logic gate on 2026-10-28. Each line: what was decided, why, an
 | 6 | Table fields | Core eight | Everything that drives a decision, nothing that doesn't | Output and cadence |
 | 7 | Duplicate filings | One row per CIK; later filing updates amount only; tracking untouched | Keeps the dashboard one-row-per-company without losing a seed-to-A step-up | Output and cadence; Data model |
 | 8 | Scope | One build; the dashboard is the v1 output | No throwaway CSV; one weekend | Build plan |
+| 9 | Time window | 7 days, weekly, plus a one-time 90-day backfill | Matches the Monday run with no overlap; backfill seeds the dashboard | Output and cadence; Open decisions |
+| 10 | Geography | US only (Form D) for v1 | Free and structural; UK/EU is a second build | Sources; Open decisions |
+| 11 | Amount band | $1M–$50M on `amount_sold` | Money actually raised; `offering_total` can be a placeholder. Accepted: rounds filed with under $1M sold so far are dropped | Sources; Open decisions |
+| 12 | Models A and B | Two open-weight models from different families via one host (e.g. OpenRouter); exact models chosen in step 6 against the golden set | Value: good results, low price; family difference keeps verification independent | Precision controls; Open decisions |
+| 13 | Repo visibility | Public repo, GitHub Pages, notes included in `tracking.yml` | Free hosting and Actions; private repo would still have a public Pages site. Accepted: notes are public, including git history | Build plan; Open decisions |
