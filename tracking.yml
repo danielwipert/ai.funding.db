@@ -1,0 +1,9 @@
+# Outreach tracking, edited by hand. One entry per company, keyed on CIK.
+# The pipeline reads this file and merges it into dashboard/data.json,
+# but it never writes to it.
+#
+# Example:
+#
+# "0001234567":
+#   contacted: true
+#   note: "Sent LinkedIn message 11/3, referenced Refund Gate"

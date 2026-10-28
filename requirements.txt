@@ -1,0 +1,8 @@
+# HTTP requests to EDGAR and company homepages
+requests>=2.31
+# Data model (one record per filing)
+pydantic>=2.6
+# Reading tracking.yml
+PyYAML>=6.0
+# Turning homepage HTML into plain text (step 5)
+beautifulsoup4>=4.12

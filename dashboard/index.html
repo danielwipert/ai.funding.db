@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Funding Scanner</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 4rem auto; padding: 0 1rem; color: #222; }
+    code { background: #f2f2f2; padding: 0.1rem 0.3rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>AI Funding Scanner</h1>
+  <p>Placeholder page. The dashboard table arrives in build step 8.</p>
+  <p>Rows in <code>data.json</code>: <span id="count">loading…</span></p>
+  <script>
+    fetch("data.json")
+      .then(r => r.json())
+      .then(rows => { document.getElementById("count").textContent = rows.length; })
+      .catch(() => { document.getElementById("count").textContent = "could not load"; });
+  </script>
+</body>
+</html>

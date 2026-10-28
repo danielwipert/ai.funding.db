@@ -1,0 +1,177 @@
+# AI Funding Scanner — Pipeline Spec v1
+
+Oct 28, 2026 · @Dan
+
+## Purpose
+
+The pipeline answers one question each week: **which AI companies closed a new funding round in the last N days, and who runs them?** Every design choice below serves that question and nothing else.
+
+The output feeds created-role outreach. A round that closed 2–8 weeks ago is the window when a founder has cash, a hiring plan with holes, and no job descriptions written. The pipeline exists to surface that window before the aggregators do.
+
+Two things it is deliberately **not**: it is not a general startup database, and it does not score fit. Fit is a human judgment applied to a short list; the pipeline's job is to make the short list trustworthy.
+
+## Definition of done
+
+"Pristine signal" means **precision over recall**: a company in the output is an AI company that raised money in the window, or the pipeline failed. Missing some real AI rounds is acceptable; including a non-AI company is not, because every false positive costs an hour of research.
+
+| Target | Number | How measured |
+| --- | --- | --- |
+| Precision (output rows that are true AI companies) | ≥ 95% | Hand-label every row for the first 4 weekly runs; then sample 20 rows/week |
+| Recall (true AI rounds in EDGAR that reach the output) | ≥ 70% | Compare against a newsletter's weekly deal list, once a month |
+| Freshness (days from Form D filing to output row) | ≤ 7 | Timestamp on every row |
+| Runtime | ≤ 30 min/week, unattended | Logged per run |
+| Cost | ≤ $5/week in API calls | Logged per run |
+
+The pipeline is done for v1 when four consecutive weekly runs hit the precision target and the review step takes under 20 minutes.
+
+## What counts as an AI company
+
+An **AI company** is one whose primary product would not exist without machine learning or LLMs — the model is the product or the core of it, not a feature bolted onto something else. The rubric below is the exact text the classifier receives; changing it changes the signal, so it is versioned.
+
+**Include (any one is sufficient):**
+
+- Builds or trains models, or sells model access or infrastructure (inference, evals, observability, data labeling, guardrails)
+- Sells a product whose core function is performed by a model: agents, copilots, document intelligence, decisioning, generation, detection, forecasting
+- Describes itself with "AI" or "ML" as the lead noun of the product, and the homepage describes what the model does, not just that it exists
+
+**Exclude (any one is disqualifying):**
+
+- AI appears only as a feature list item ("AI-powered insights") on a product that would work without it — a CRM, a marketplace, a logistics network, a bank
+- Services firms, agencies, consultancies, even "AI consultancies"
+- Hardware, chips, robotics, biotech, drug discovery (real AI, wrong lane for this search)
+- Crypto, Web3, or anything whose homepage mentions tokens
+- Companies with a Public Sector, Federal, Defense, or National Security vertical on the homepage
+
+**Uncertain:** if the classifier cannot decide from the evidence, the row goes to a review queue, never to the output. Uncertain is a valid answer; a confident guess is not.
+
+The rubric is deliberately strict on "bolted-on AI." In 2026 nearly every SaaS homepage says AI; the test is whether the homepage explains what the model does.
+
+## Sources
+
+EDGAR Form D is the only primary source; everything else enriches a name EDGAR already gave us. Form D is filed within 15 days of first sale under Regulation D, so it is the earliest public record of a round and catches seed rounds that never get press.
+
+| Source | Role | What it gives | What it lacks | Cost |
+| --- | --- | --- | --- | --- |
+| [EDGAR full-text search](https://efts.sec.gov/LATEST/search-index) | Primary feed | Every Form D in a date window: company name, CIK, accession number | Any description of the business | Free, rate-limited (\~10 req/s, User-Agent header required) |
+| Form D XML (`primary_doc.xml` per filing) | Primary detail | Offering amount, amount sold, industry group, state, related persons (officers, directors), first-sale date | Sector beyond coarse buckets | Free |
+| Company homepage (fetched) | Enrichment, evidence | What the product is, in the company's own words | Exists only if we find the URL | Free |
+| Web search (one query per candidate) | Enrichment | Homepage URL, press coverage, a snippet | Noisy for common names | Low |
+| LinkedIn company page | Enrichment, optional | Headcount band, HQ | Blocks scraping; manual lookup only | Manual |
+| Crunchbase / newsletter deal lists | Validation only | A weekly list of announced rounds to measure recall against | Lags EDGAR by days to weeks | Free tier |
+
+Two Form D fields do most of the pre-filtering. **Industry Group** keeps `Other Technology` and `Business Services` and drops `Real Estate`, `Oil and Gas`, `Banking`, `Pooled Investment Fund` and the rest (funds file Form D constantly and are the largest source of noise). **Total Offering Amount** keeps $1M–$50M. Both are structural fields, so they never need a model.
+
+Open question for Dan: does the output need non-US companies? Form D only covers US issuers; adding UK/EU means Companies House or Dealroom, a different build.
+
+## Pipeline stages
+
+Seven stages, each a separate Python function with its own input and output file, so any stage can be re-run alone. Stages 1–3 touch no model and cut a few hundred weekly filings to roughly 30–80. Stages 5 and 6 are the CASDAM pattern: a generator and a structurally different verifier, and only agreement ships.
+
+&#91;embedded content: pipeline · 7 stages, 1 review queue\]
+
+A filing moves down the column; anything the two models cannot agree on, or either calls uncertain, goes right to the review queue instead of the sheet. Every review decision becomes a labeled example, so the test set grows for free.
+
+## Data model
+
+One Pydantic record per filing carries through every stage; each stage adds fields and never overwrites earlier ones. That makes a bad output row traceable to the stage that produced it.
+
+| Field | Set by stage | Type | Notes |
+| --- | --- | --- | --- |
+| `accession_no` | 1 Pull | str | Primary key; one Form D = one row |
+| `cik`, `company_name` | 1 Pull | str | As EDGAR prints them |
+| `filing_date`, `first_sale_date` | 2 Parse | date | Freshness is measured from `filing_date` |
+| `offering_total_usd`, `amount_sold_usd` | 2 Parse | int | `amount_sold` is the real signal; `offering_total` can be a placeholder |
+| `industry_group` | 2 Parse | str | EDGAR's enum, verbatim |
+| `state`, `city` | 2 Parse | str | Issuer address |
+| `related_persons` | 2 Parse | list\[Person\] | Name + relationship (Executive Officer, Director, Promoter); these are the outreach targets |
+| `is_amendment` | 2 Parse | bool | `D/A` filings are dropped unless `amount_sold` rose |
+| `passed_structural` | 3 Filter | bool | Plus `drop_reason` when false |
+| `homepage_url`, `search_snippet` | 4 Enrich | str | Null allowed; a null homepage forces `uncertain` |
+| `evidence_text` | 4 Enrich | str | Homepage text, capped at \~1,500 words |
+| `classify_a` | 5 Classify | Verdict | `{label: yes/no/uncertain, confidence: 0-1, reason: str, rubric_version: str}` |
+| `classify_b` | 6 Verify | Verdict | Same shape, different model and prompt |
+| `final` | 6 Verify | enum | `ship`, `review`, `drop` |
+| `human_label` | Review | Verdict | Filled by Dan; becomes a test-set example |
+| `run_id`, `processed_at` | every stage | str, datetime | One run = one dated folder of JSONL files |
+
+Storage is JSONL per stage per run (`runs/2026-11-01/03_filtered.jsonl`), plus one append-only `labels.jsonl` for the test set. No database until the files stop being enough.
+
+Two fields come from outside the pipeline and are merged at build time from `tracking.yml`, keyed on `cik`: `contacted` (bool, default false) and `note` (str, default empty). Dedupe is on `cik`, so `accession_no` stays the key for filings and `cik` becomes the key for dashboard rows.
+
+## Precision controls
+
+Five mechanisms keep false positives near zero. They are the same ones in the AI Operations Specification, applied to a one-person pipeline.
+
+1. **Evidence or nothing.** The classifier sees only `evidence_text` from the company's own homepage plus the search snippet. No homepage found means `uncertain`, never a guess from the company name. A name like "Foo AI Inc" is not evidence.
+2. **Generator/verifier separation.** Model A classifies with the rubric. Model B, a different provider, sees the same evidence and a differently worded prompt that asks it to argue the company is *not* an AI company, then give a verdict. Only two `yes` verdicts ship. Disagreement goes to review.
+3. **Confidence floor.** Either model under 0.8 confidence routes to review regardless of label.
+4. **Golden set.** Before the first real run, hand-label 60 filings: 20 clear AI, 20 clear non-AI, 20 hard cases (bolted-on AI, consultancies, robotics). Every rubric or prompt change is re-run against this set and must hold precision ≥ 95% before it ships. The set grows from review decisions.
+5. **Weekly audit.** After each run, 20 output rows are sampled and checked by hand against the homepage. Any false positive gets a postmortem line: which stage let it through, and what rubric or filter change prevents the class of error. The fix is a new golden-set example, not a one-off patch.
+
+Measured error rate is reported per run as `false_positives / shipped_rows` with the sample size beside it, so a 0% on 20 samples is read as "under \~15%", not "perfect."
+
+## Output and cadence
+
+The output is a dashboard on GitHub Pages: one newest-first table, sortable and filterable, one row per company keyed on CIK. The pipeline writes `dashboard/data.json` and commits it; Pages rebuilds. Outreach tracking lives in `tracking.yml` in the same repo (one entry per CIK: `contacted: true/false`, `note: "..."`), edited by Dan and merged into `data.json` at build time, so the pipeline never overwrites a note.
+
+| Column | Source | Example |
+| --- | --- | --- |
+| Company (links to homepage) | pipeline | Pinch AI |
+| Filing date | pipeline | 2026-01-12 |
+| Amount sold (USD) | pipeline; updated if a later filing is higher | 5,000,000 |
+| State | pipeline | CA |
+| One-line description (model A, ≤ 20 words) | pipeline | Post-purchase risk platform deciding returns and refunds for retailers |
+| Related persons | pipeline | Arthi Rajan Makhija (Executive Officer); … |
+| EDGAR filing | pipeline | link to the Form D |
+| Contacted + note | `tracking.yml` | ✓ · "Sent LinkedIn message 11/3, referenced Refund Gate" |
+
+**Merge rule:** a company already in `data.json` keeps its row; a later Form D for the same CIK updates `amount_sold` and sets `last_updated` only when the amount rose. Contacted and note are never touched by the pipeline. Polish level is clean and functional: good type, sortable columns, filters on state, amount, contacted; no summary header, no detail panel in v1.
+
+**Cadence:** a GitHub Actions workflow runs the pipeline every Monday 6am CT on the prior 7 days and commits `data.json`; Pages redeploys on the commit. A `workflow_dispatch` input `since` allows a one-off backfill (the last 90 days, run once to seed the dashboard). Secrets (model API keys) live in repository secrets, never in the repo.
+
+## Build plan
+
+Ten steps, in order, each ending with something that runs. No step opens until the one before it produces a file you can look at. Estimated 13–17 hours total; steps 1–4 are the first day. The repo is created in step 0 so every later step commits into it.
+
+- [ ] **Step 0 — Repo (30 min).** Create the GitHub repo with `pipeline/`, `dashboard/`, `tracking.yml`, `runs/` (gitignored except summaries), `requirements.txt`. Enable Pages from the `dashboard/` folder. Done when a placeholder `index.html` is live at the Pages URL.
+- [ ] **Step 1 — Pull (1 hr).** `pull.py`: hit the EDGAR full-text search for `forms=D` over a date range, page through results, write `01_filings.jsonl` with accession, CIK, name, filing date. Done when a 7-day pull returns a few hundred rows and a re-run is idempotent.
+- [ ] **Step 2 — Parse (2 hrs).** `parse.py`: fetch each filing's `primary_doc.xml`, map the fields in the data model, respect the rate limit, cache every XML locally. Done when every row has amount, industry group, state, and related persons, and a second run fetches nothing new.
+- [ ] **Step 3 — Structural filter (30 min).** `filter.py`: apply industry group, amount band, amendment rule. Write `drop_reason` on every dropped row. Done when the survivor count is 30–80 for a 7-day window and spot-checking 10 drops shows no AI company among them.
+- [ ] **Step 4 — Golden set (1.5 hrs).** Hand-label 60 survivors from a backfill pull into `labels.jsonl`. Done before any prompt is written, so the prompt is tested against labels it did not see.
+- [ ] **Step 5 — Enrich (2 hrs).** `enrich.py`: one web search per survivor, pick the homepage, fetch and strip it to text, cap length. Done when ≥ 80% of survivors have `evidence_text` and the rest are marked null.
+- [ ] **Step 6 — Classify + Verify (2 hrs).** `classify.py`: rubric v1 as a prompt, Pydantic-validated JSON verdict, model A then model B, agreement logic, review routing. Done when precision on the golden set is ≥ 95% and the review queue holds the hard cases, not the easy ones.
+- [ ] **Step 7 — Merge + data.json (1 hr).** `output.py`: dedupe on CIK against the existing `data.json`, apply the amount-update rule, merge `tracking.yml`, write `dashboard/data.json` and a run summary (counts per stage, cost, runtime). Done when a second run changes nothing it shouldn't.
+- [ ] **Step 8 — Dashboard (2–3 hrs).** `dashboard/index.html`: one self-contained page that loads `data.json`, renders the eight columns newest-first, sorts on any column, filters on state, amount, and contacted. Done when the ten companies from the target list render cleanly from a hand-made `data.json`.
+- [ ] **Step 9 — Actions (1 hr).** Workflow: cron Monday 6am CT plus `workflow_dispatch` with a `since` input; installs requirements, runs the pipeline, commits `data.json` and the run summary. API keys in repository secrets. Done when the first scheduled run lands rows on the live page without you touching it.
+- [ ] **Step 10 — Audit routine (30 min).** A 20-row audit checklist for Sunday review and a one-line postmortem format for any false positive. Done when it has been used once.
+
+Order matters at one point: the golden set (step 4) comes before the classifier (step 6). Writing the prompt first and then labeling what it got right is how a pipeline grades its own homework.
+
+## Open decisions
+
+Four choices still change the build. The sheet-location question is resolved (GitHub Pages, see the decision log). Confirm or override the rest before step 1.
+
+| Decision | Options | Recommended default | Why |
+| --- | --- | --- | --- |
+| Time window | 7 / 14 / 30 days per run | 7 days, weekly, plus a one-time 90-day backfill | Matches the Sunday/Monday cadence; backfill seeds the dashboard on day one |
+| Geography | US only (Form D) vs. add UK/EU | US only for v1 | Form D is free and structural; EU sources are a second build |
+| Amount band | $1–50M vs. wider | $1–50M on `amount_sold` | Under $1M is friends-and-family; over $50M is past the created-role window |
+| Models A and B | Which two providers | Two different providers, cheap tier for both | Verifier independence matters more than either model's strength; cost stays under $5/week |
+| Repo visibility | Public (free Pages) vs. private (GitHub Pro, \~$4/mo) | Private | The dashboard carries founder names and your outreach notes |
+
+One more decision is not the pipeline's: **what happens to the output.** The dashboard produces candidates; the three-company outreach already scoped is still the first thing to send. The pipeline is the weekly feed behind it, not a reason to wait.
+
+## Decision log
+
+Decisions made by logic gate on 2026-10-28. Each line: what was decided, why, and where it lives in this spec.
+
+| # | Decision | Chosen | Why | Lives in |
+| --- | --- | --- | --- | --- |
+| 1 | Monday landing view | Newest-first table with filters | Simple, fast to build; Dan decides what matters | Output and cadence |
+| 2 | Outreach status model | Binary contacted + free-text note | Lowest friction; staleness tracking not needed yet | Output and cadence; Data model |
+| 3 | Polish level | Clean and functional | Laptop-only, nobody else sees it | Output and cadence |
+| 4 | Where it lives | GitHub Actions runs the pipeline; GitHub Pages serves the dashboard (changed from a hosted artifact) | Dan's choice; keeps pipeline and dashboard in one repo with history | Output and cadence; Build plan |
+| 5 | Where tracking lives | `tracking.yml` in the repo, merged at build | Durable, versioned, no tokens in the browser; cost is a commit per update | Output and cadence; Data model |
+| 6 | Table fields | Core eight | Everything that drives a decision, nothing that doesn't | Output and cadence |
+| 7 | Duplicate filings | One row per CIK; later filing updates amount only; tracking untouched | Keeps the dashboard one-row-per-company without losing a seed-to-A step-up | Output and cadence; Data model |
+| 8 | Scope | One build; the dashboard is the v1 output | No throwaway CSV; one weekend | Build plan |

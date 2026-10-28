@@ -1,0 +1,34 @@
+# Publishes the dashboard/ folder to GitHub Pages.
+# GitHub Pages can only serve the repo root or /docs directly, so this
+# workflow uploads dashboard/ as the site instead.
+name: Deploy dashboard
+
+on:
+  push:
+    branches: [main]
+    paths: ["dashboard/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard
+      - id: deployment
+        uses: actions/deploy-pages@v4
