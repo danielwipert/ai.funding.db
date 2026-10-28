@@ -13,7 +13,8 @@ The full design is in [`planning_docs/AI_Funding_Scanner_Pipeline_Spec_v1.md`](p
 
 | Path | What lives there |
 | --- | --- |
-| `planning_docs/` | The spec and other planning notes |
+| `planning_docs/` | The spec, the logic-gates decision method, and other planning notes |
+| `CLAUDE.md` | Instructions Claude Code reads at the start of every session |
 | `pipeline/` | Python code, one file per stage (`pull.py`, `parse.py`, `filter.py`, ...) |
 | `dashboard/` | The web page (`index.html`) and the data it shows (`data.json`) |
 | `runs/` | One dated folder per run, e.g. `runs/2026-11-01/`. Only `summary.json` files are committed |
