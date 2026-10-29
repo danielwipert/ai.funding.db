@@ -76,6 +76,14 @@ Then apply the structural filter (writes `03_filtered.jsonl`; every row is kept,
 python -m pipeline.filter
 ```
 
+## Golden set (step 4)
+
+`labels/golden_draft.csv` holds 60 pre-labeled companies. Review it (hard cases are at the top), change any `label` you disagree with, then turn it into the answer key `labels.jsonl`:
+
+```bash
+python -m pipeline.labels labels/golden_draft.csv
+```
+
 ## Build progress
 
 - [x] Step 0 — Repo skeleton
