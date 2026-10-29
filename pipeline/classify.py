@@ -104,12 +104,14 @@ def call_model(model: str, skeptic: bool, message: str) -> Verdict:
                     {"role": "user", "content": message},
                 ],
                 "temperature": 0,
+                "reasoning": {"effort": "low"},  # a yes/no call needs little thinking; keeps it fast and cheap
+                "max_tokens": 4000,
                 "response_format": {"type": "json_schema", "json_schema": {
                     "name": "verdict", "strict": True, "schema": schema(skeptic)}},
                 "provider": {"require_parameters": True},  # only hosts that enforce the schema
                 "usage": {"include": True},
             },
-            timeout=180,
+            timeout=120,
         )
         response.raise_for_status()
         body = response.json()

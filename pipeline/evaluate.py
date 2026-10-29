@@ -5,7 +5,8 @@ EDGAR and the homepage text is fetched; every candidate model then answers
 as classifier (A) and as skeptic (B). Pairs from different model families
 are scored with the same agreement logic the pipeline uses.
 
-Writes runs/golden-eval/verdicts.jsonl and runs/golden-eval/report.md.
+Writes runs/golden-eval/verdicts.jsonl (one line per answer, written as it
+arrives, so a re-run only asks what is missing) and runs/golden-eval/report.md.
 Needs EDGAR_CONTACT_EMAIL and OPENROUTER_API_KEY.
 
 Usage:
@@ -13,6 +14,7 @@ Usage:
 """
 
 import json
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from itertools import product
 
@@ -60,18 +62,41 @@ def confident_yes(v: Verdict) -> bool:
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     cases = load_cases()
+    index = {c["accession_no"]: i for i, c in enumerate(cases)}
     jobs = list(product(range(len(cases)), CANDIDATES, (False, True)))
-    print(f"{len(cases)} labeled companies with a homepage; {len(jobs)} model calls")
 
-    with ThreadPoolExecutor(max_workers=8) as pool:
-        verdicts = list(pool.map(lambda j: call_model(j[1], j[2], cases[j[0]]["message"]), jobs))
-    answers = {(i, model, skeptic): v for (i, model, skeptic), v in zip(jobs, verdicts)}
+    # Reuse answers from an earlier, interrupted run (failed calls are asked again)
+    answers = {}
+    verdicts_path = OUT_DIR / "verdicts.jsonl"
+    if verdicts_path.exists():
+        for line in verdicts_path.read_text().splitlines():
+            row = json.loads(line)
+            v = Verdict(**{k: row[k] for k in Verdict.model_fields})
+            if row["accession_no"] in index and "call failed" not in v.reason:
+                answers[(index[row["accession_no"]], row["model"], row["role"] == "B")] = v
+    todo = [j for j in jobs if j not in answers]
+    print(f"{len(cases)} labeled companies with a homepage; {len(jobs)} answers needed, {len(todo)} to ask", flush=True)
 
-    with (OUT_DIR / "verdicts.jsonl").open("w") as f:
-        for (i, model, skeptic), v in answers.items():
-            f.write(json.dumps({"company": cases[i]["company_name"], "truth": cases[i]["label"],
-                                "category": cases[i]["category"], "role": "B" if skeptic else "A",
-                                **v.model_dump()}) + "\n")
+    lock = threading.Lock()
+    done = 0
+
+    def ask(job):
+        nonlocal done
+        i, model, skeptic = job
+        v = call_model(model, skeptic, cases[i]["message"])
+        with lock:
+            answers[job] = v
+            with verdicts_path.open("a") as f:
+                f.write(json.dumps({"accession_no": cases[i]["accession_no"], "company": cases[i]["company_name"],
+                                    "truth": cases[i]["label"], "category": cases[i]["category"],
+                                    "role": "B" if skeptic else "A", **v.model_dump()}) + "\n")
+            done += 1
+            print(f"  {done}/{len(todo)} {model} {'B' if skeptic else 'A'} {cases[i]['company_name']}: "
+                  f"{v.label} {v.confidence:.2f}", flush=True)
+
+    with ThreadPoolExecutor(max_workers=16) as pool:
+        list(pool.map(ask, todo))
+    verdicts = [answers[j] for j in jobs]
 
     truth_yes = sum(c["label"] == "yes" for c in cases)
     lines = [f"# Golden-set evaluation\n\n{len(cases)} companies with a homepage, {truth_yes} labeled AI.\n",
