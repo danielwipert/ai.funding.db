@@ -66,9 +66,10 @@ FIELDS = {
                      "description": "Does the website belong to the company in the filing?"},
     "label": {"type": "string", "enum": ["yes", "no", "uncertain"],
               "description": "Is it an AI company under the rubric?"},
-    "confidence": {"type": "number", "description": "0 to 1"},
+    "confidence": {"type": "number", "description": "A number between 0 and 1, e.g. 0.9"},
     "reason": {"type": "string", "description": "At most 30 words, naming the rubric rule applied"},
-    "description": {"type": "string", "description": "At most 20 words: what the product does"},
+    "description": {"type": "string",
+                    "description": "In English, at most 20 words: what the product does. No verdict or reasoning."},
 }
 
 
@@ -140,7 +141,17 @@ def ask_once(model: str, skeptic: bool, message: str) -> Verdict:
     body = response.json()
     data = parse_json(body["choices"][0]["message"]["content"])
     cost = (body.get("usage") or {}).get("cost")
+    data["confidence"] = normalize_confidence(data["confidence"])
     return Verdict(**{k: data[k] for k in FIELDS}, model=model, rubric_version=RUBRIC_VERSION, cost_usd=cost)
+
+
+def normalize_confidence(value) -> float:
+    """Models sometimes answer 90 or 4 instead of 0.9. Read anything above 1 as
+    a percentage, so an odd scale lands low (review), never falsely high."""
+    value = float(value)
+    if value > 1:
+        value /= 100
+    return min(max(value, 0.0), 1.0)
 
 
 def decide(a: Verdict, b: Verdict, weak_match: bool) -> tuple[str, str]:
