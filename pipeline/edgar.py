@@ -34,8 +34,8 @@ def _get_session() -> requests.Session:
     return _session
 
 
-def get_json(url: str, params: dict | None = None) -> dict:
-    """GET a URL from EDGAR and return the parsed JSON, respecting the rate limit."""
+def _get(url: str, params: dict | None = None) -> requests.Response:
+    """GET a URL from EDGAR, respecting the rate limit."""
     global _last_request_at
     wait = MIN_SECONDS_BETWEEN_REQUESTS - (time.monotonic() - _last_request_at)
     if wait > 0:
@@ -44,4 +44,14 @@ def get_json(url: str, params: dict | None = None) -> dict:
 
     response = _get_session().get(url, params=params, timeout=30)
     response.raise_for_status()
-    return response.json()
+    return response
+
+
+def get_json(url: str, params: dict | None = None) -> dict:
+    """GET a URL from EDGAR and return the parsed JSON."""
+    return _get(url, params).json()
+
+
+def get_bytes(url: str) -> bytes:
+    """GET a URL from EDGAR and return the raw body (e.g. a filing's XML)."""
+    return _get(url).content

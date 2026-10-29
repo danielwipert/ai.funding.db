@@ -85,6 +85,7 @@ One Pydantic record per filing carries through every stage; each stage adds fiel
 | `state`, `city` | 2 Parse | str | Issuer address |
 | `related_persons` | 2 Parse | list\[Person\] | Name + relationship (Executive Officer, Director, Promoter); these are the outreach targets |
 | `is_amendment` | 2 Parse | bool | `D/A` filings are dropped unless `amount_sold` rose |
+| `parse_error` | 2 Parse | str | Null unless the XML could not be fetched or read |
 | `passed_structural` | 3 Filter | bool | Plus `drop_reason` when false |
 | `homepage_url`, `search_snippet` | 4 Enrich | str | Null allowed; a null homepage forces `uncertain` |
 | `evidence_text` | 4 Enrich | str | Homepage text, capped at \~1,500 words |
@@ -135,7 +136,7 @@ Ten steps, in order, each ending with something that runs. No step opens until t
 
 - [x] **Step 0 — Repo (30 min).** Create the GitHub repo with `pipeline/`, `dashboard/`, `tracking.yml`, `runs/` (gitignored except summaries), `requirements.txt`. Make the repo public and publish `dashboard/` to Pages through a deploy workflow (Pages cannot serve a `dashboard/` folder directly). Done when a placeholder `index.html` is live at the Pages URL.
 - [x] **Step 1 — Pull (1 hr).** `pull.py`: hit the EDGAR full-text search for `forms=D` over a date range, page through results, write `01_filings.jsonl` with accession, CIK, name, filing date. Done when a 7-day pull returns a few hundred rows and a re-run is idempotent. (First test, 2026-10-21 to 10-27: 1,266 filings including D/A, ~5 seconds; re-run identical.)
-- [ ] **Step 2 — Parse (2 hrs).** `parse.py`: fetch each filing's `primary_doc.xml`, map the fields in the data model, respect the rate limit, cache every XML locally. Done when every row has amount, industry group, state, and related persons, and a second run fetches nothing new.
+- [x] **Step 2 — Parse (2 hrs).** `parse.py`: fetch each filing's `primary_doc.xml`, map the fields in the data model, respect the rate limit, cache every XML locally. Done when every row has amount, industry group, state, and related persons, and a second run fetches nothing new. (First test, same week: 1,266 parsed, 0 errors, ~3 min; re-run downloaded 0.)
 - [ ] **Step 3 — Structural filter (30 min).** `filter.py`: apply industry group, amount band, amendment rule. Write `drop_reason` on every dropped row. Done when the survivor count is 30–80 for a 7-day window and spot-checking 10 drops shows no AI company among them.
 - [ ] **Step 4 — Golden set (1.5 hrs).** Hand-label 60 survivors from a backfill pull into `labels.jsonl`. Done before any prompt is written, so the prompt is tested against labels it did not see.
 - [ ] **Step 5 — Enrich (2 hrs).** `enrich.py`: one web search per survivor, pick the homepage, fetch and strip it to text, cap length. Done when ≥ 80% of survivors have `evidence_text` and the rest are marked null.

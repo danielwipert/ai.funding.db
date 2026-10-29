@@ -62,11 +62,19 @@ Or pick the dates yourself:
 python -m pipeline.pull --since 2026-10-21 --until 2026-10-27
 ```
 
+Then fetch and read each filing's details (writes `02_parsed.jsonl` in the same run folder; downloaded XML is kept in `cache/`):
+
+```bash
+python -m pipeline.parse
+```
+
+If you used `--run-id` on the pull, pass the same one here.
+
 ## Build progress
 
 - [x] Step 0 — Repo skeleton
 - [x] Step 1 — Pull (`pipeline/pull.py`)
-- [ ] Step 2 — Parse (`pipeline/parse.py`)
+- [x] Step 2 — Parse (`pipeline/parse.py`)
 - [ ] Step 3 — Structural filter (`pipeline/filter.py`)
 - [ ] Step 4 — Golden set (`labels.jsonl`)
 - [ ] Step 5 — Enrich (`pipeline/enrich.py`)
