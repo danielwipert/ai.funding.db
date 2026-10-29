@@ -21,7 +21,7 @@ from itertools import product
 from pipeline.classify import CONFIDENCE_FLOOR, call_model, decide, evidence_message
 from pipeline.enrich import cap_words, page_text
 from pipeline.labels import LABELS_PATH
-from pipeline.models import Verdict
+from pipeline.models import Verdict, jsonl_lines
 from pipeline.parse import RUNS_DIR, fetch_xml, parse_xml
 
 CANDIDATES = [
@@ -39,7 +39,7 @@ def family(model: str) -> str:
 def load_cases() -> list[dict]:
     """Labeled companies with a homepage, plus their Form D facts and page text."""
     cases = []
-    for line in LABELS_PATH.read_text().splitlines():
+    for line in jsonl_lines(LABELS_PATH):
         label = json.loads(line)
         if not label["homepage_url"]:
             continue  # the pipeline drops these as "no homepage found"
@@ -68,7 +68,7 @@ def main() -> None:
     answers = {}
     verdicts_path = OUT_DIR / "verdicts.jsonl"
     if verdicts_path.exists():
-        for line in verdicts_path.read_text().splitlines():
+        for line in jsonl_lines(verdicts_path):
             row = json.loads(line)
             v = Verdict(**{k: row[k] for k in Verdict.model_fields})
             if row["accession_no"] in index and "call failed" not in v.reason:

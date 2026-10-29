@@ -24,7 +24,7 @@ from pathlib import Path
 import yaml
 
 from pipeline.labels import LABELS_PATH, RUBRIC_VERSION
-from pipeline.models import Filing
+from pipeline.models import Filing, jsonl_lines
 from pipeline.parse import RUNS_DIR
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -122,7 +122,7 @@ def merge(filings: list[Filing], data: dict, decisions: dict, today: str) -> Cou
             review[filing.cik] = row
             changes["sent to review"] += 1
 
-    existing_labels = {json.loads(line)["accession_no"] for line in LABELS_PATH.read_text().splitlines()}
+    existing_labels = {json.loads(line)["accession_no"] for line in jsonl_lines(LABELS_PATH)}
     for cik, decision in decisions.items():
         if isinstance(decision, bool):  # YAML reads a bare yes / no as true / false
             decision = "yes" if decision else "no"
@@ -150,9 +150,9 @@ def apply_tracking(data: dict, tracking: dict) -> None:
 def summarize(run_id: str, changes: Counter) -> dict:
     """Counts per stage, cost and runtime for one run."""
     run_dir = RUNS_DIR / run_id
-    pulled = [Filing.model_validate_json(l) for l in (run_dir / "02_parsed.jsonl").read_text().splitlines()]
-    filtered = [Filing.model_validate_json(l) for l in (run_dir / "03_filtered.jsonl").read_text().splitlines()]
-    classified = [Filing.model_validate_json(l) for l in (run_dir / "05_classified.jsonl").read_text().splitlines()]
+    pulled = [Filing.model_validate_json(l) for l in jsonl_lines(run_dir / "02_parsed.jsonl")]
+    filtered = [Filing.model_validate_json(l) for l in jsonl_lines(run_dir / "03_filtered.jsonl")]
+    classified = [Filing.model_validate_json(l) for l in jsonl_lines(run_dir / "05_classified.jsonl")]
     model_cost = sum(v.cost_usd or 0 for f in classified for v in (f.classify_a, f.classify_b) if v)
     searches = sum(f.searches or 0 for f in classified)
     started = min(f.processed_at for f in pulled)
@@ -178,7 +178,7 @@ def summarize(run_id: str, changes: Counter) -> dict:
 
 def output(run_id: str) -> None:
     classified_path = RUNS_DIR / run_id / "05_classified.jsonl"
-    filings = [Filing.model_validate_json(l) for l in classified_path.read_text().splitlines()]
+    filings = [Filing.model_validate_json(l) for l in jsonl_lines(classified_path)]
     today = date.today().isoformat()
 
     data = load_data()

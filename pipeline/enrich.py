@@ -26,7 +26,7 @@ from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
 
-from pipeline.models import Filing
+from pipeline.models import Filing, jsonl_lines
 from pipeline.parse import RUNS_DIR
 
 TAVILY_URL = "https://api.tavily.com/search"
@@ -265,7 +265,7 @@ def enrich_one(filing: Filing) -> dict:
 def enrich(run_id: str) -> None:
     in_path = RUNS_DIR / run_id / "03_filtered.jsonl"
     out_path = RUNS_DIR / run_id / "04_enriched.jsonl"
-    filings = [Filing.model_validate_json(line) for line in in_path.read_text().splitlines()]
+    filings = [Filing.model_validate_json(line) for line in jsonl_lines(in_path)]
     survivors = [f for f in filings if f.passed_structural]
     processed_at = datetime.now(timezone.utc)
 

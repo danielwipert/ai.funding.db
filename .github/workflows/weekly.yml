@@ -1,7 +1,9 @@
 # The weekly pipeline run: Mondays ~6am Central, on the prior 7 days of
 # Form D filings. Commits dashboard/data.json, labels.jsonl (review
 # decisions) and the run summary, then redeploys the dashboard.
-# Run it by hand from the Actions tab with a "since" date for a backfill.
+# Run it by hand from the Actions tab with a "since" date for a backfill,
+# or with "resume_run" to finish a failed run from its saved files (stages
+# whose output file already exists are skipped, so nothing is paid twice).
 name: Weekly pipeline
 
 on:
@@ -12,8 +14,12 @@ on:
       since:
         description: "First filing date, YYYY-MM-DD (blank = 7 days ago). Use an older date for a backfill."
         required: false
+      resume_run:
+        description: "Run ID (number in the URL of a failed run) to continue from its saved files"
+        required: false
 
 permissions:
+  actions: read  # to download a previous run's files when resuming
   contents: write
   pages: write
   id-token: write
@@ -39,21 +45,36 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
 
+      - name: Download the files of the run being resumed
+        if: inputs.resume_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: run-files
+          path: runs/
+          run-id: ${{ inputs.resume_run }}
+          github-token: ${{ github.token }}
+
       - name: Set run id
-        run: echo "RUN_ID=$(date -u +%F)" >> "$GITHUB_ENV"
+        run: |
+          if [ -n "${{ inputs.resume_run }}" ]; then
+            echo "RUN_ID=$(ls runs | head -1)" >> "$GITHUB_ENV"
+          else
+            echo "RUN_ID=$(date -u +%F)" >> "$GITHUB_ENV"
+          fi
       - name: 1 Pull
         run: |
+          [ -f "runs/$RUN_ID/01_filings.jsonl" ] && { echo "Already done, skipping"; exit 0; }
           ARGS="--run-id $RUN_ID"
           [ -n "${{ inputs.since }}" ] && ARGS="$ARGS --since ${{ inputs.since }}"
           python -m pipeline.pull $ARGS
       - name: 2 Parse
-        run: python -m pipeline.parse --run-id $RUN_ID
+        run: '[ -f "runs/$RUN_ID/02_parsed.jsonl" ] && echo "Already done, skipping" || python -m pipeline.parse --run-id $RUN_ID'
       - name: 3 Filter
-        run: python -m pipeline.filter --run-id $RUN_ID
+        run: '[ -f "runs/$RUN_ID/03_filtered.jsonl" ] && echo "Already done, skipping" || python -m pipeline.filter --run-id $RUN_ID'
       - name: 4 Enrich
-        run: python -m pipeline.enrich --run-id $RUN_ID
+        run: '[ -f "runs/$RUN_ID/04_enriched.jsonl" ] && echo "Already done, skipping" || python -m pipeline.enrich --run-id $RUN_ID'
       - name: 5-6 Classify + Verify
-        run: python -m pipeline.classify --run-id $RUN_ID
+        run: '[ -f "runs/$RUN_ID/05_classified.jsonl" ] && echo "Already done, skipping" || python -m pipeline.classify --run-id $RUN_ID'
       - name: 7 Output
         run: python -m pipeline.output --run-id $RUN_ID
 

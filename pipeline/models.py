@@ -6,8 +6,16 @@ files written by earlier stages still load.
 """
 
 from datetime import date, datetime
+from pathlib import Path
 
 from pydantic import BaseModel
+
+
+def jsonl_lines(path: Path) -> list[str]:
+    """The lines of a JSONL file. Splits on "\n" only: str.splitlines() also
+    splits on characters like U+2028 that JSON keeps raw inside strings
+    (homepage text contains them), which cuts a record in half."""
+    return [line for line in path.read_text().split("\n") if line.strip()]
 
 
 class Person(BaseModel):

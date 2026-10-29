@@ -27,7 +27,7 @@ from pathlib import Path
 
 import requests
 
-from pipeline.models import Filing, Verdict
+from pipeline.models import Filing, Verdict, jsonl_lines
 from pipeline.parse import RUNS_DIR
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
@@ -192,7 +192,7 @@ def classify_one(filing: Filing) -> dict:
 def classify(run_id: str) -> None:
     in_path = RUNS_DIR / run_id / "04_enriched.jsonl"
     out_path = RUNS_DIR / run_id / "05_classified.jsonl"
-    filings = [Filing.model_validate_json(line) for line in in_path.read_text().splitlines()]
+    filings = [Filing.model_validate_json(line) for line in jsonl_lines(in_path)]
     processed_at = datetime.now(timezone.utc)
 
     with ThreadPoolExecutor(max_workers=8) as pool:

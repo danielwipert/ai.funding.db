@@ -16,7 +16,7 @@ from datetime import date, datetime, timezone
 
 import requests
 
-from pipeline.models import Filing
+from pipeline.models import Filing, jsonl_lines
 from pipeline.parse import RUNS_DIR, fetch_xml, parse_xml
 
 # Decision 15: "Other" is kept because some AI startups tick the catch-all box.
@@ -62,7 +62,7 @@ def drop_reason(filing: Filing) -> str | None:
 def filter_run(run_id: str) -> None:
     in_path = RUNS_DIR / run_id / "02_parsed.jsonl"
     out_path = RUNS_DIR / run_id / "03_filtered.jsonl"
-    filings = [Filing.model_validate_json(line) for line in in_path.read_text().splitlines()]
+    filings = [Filing.model_validate_json(line) for line in jsonl_lines(in_path)]
     processed_at = datetime.now(timezone.utc)
 
     reasons = Counter()

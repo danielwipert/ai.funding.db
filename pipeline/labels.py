@@ -14,6 +14,8 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from pipeline.models import jsonl_lines
+
 ROOT = Path(__file__).resolve().parent.parent
 LABELS_PATH = ROOT / "labels.jsonl"
 RUBRIC_VERSION = "v2"
@@ -22,7 +24,7 @@ RUBRIC_VERSION = "v2"
 def import_sheet(sheet_path: Path) -> None:
     existing = set()
     if LABELS_PATH.exists():
-        existing = {json.loads(line)["accession_no"] for line in LABELS_PATH.read_text().splitlines()}
+        existing = {json.loads(line)["accession_no"] for line in jsonl_lines(LABELS_PATH)}
 
     added, skipped, problems = 0, 0, []
     labeled_at = datetime.now(timezone.utc).isoformat()

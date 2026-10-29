@@ -16,7 +16,7 @@ from pathlib import Path
 import requests
 
 from pipeline.edgar import get_bytes
-from pipeline.models import Filing, Person
+from pipeline.models import Filing, Person, jsonl_lines
 
 ROOT = Path(__file__).resolve().parent.parent
 RUNS_DIR = ROOT / "runs"
@@ -88,7 +88,7 @@ def parse_xml(data: bytes) -> dict:
 def parse(run_id: str) -> Path:
     in_path = RUNS_DIR / run_id / "01_filings.jsonl"
     out_path = RUNS_DIR / run_id / "02_parsed.jsonl"
-    filings = [Filing.model_validate_json(line) for line in in_path.read_text().splitlines()]
+    filings = [Filing.model_validate_json(line) for line in jsonl_lines(in_path)]
     processed_at = datetime.now(timezone.utc)
 
     downloaded = errors = 0
