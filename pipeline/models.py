@@ -18,6 +18,19 @@ class Person(BaseModel):
     clarification: str | None = None  # free text, often a title like "CEO"
 
 
+class Verdict(BaseModel):
+    """One model's answer on one company."""
+
+    same_company: str  # yes / no / uncertain: does the website belong to the filer?
+    label: str  # yes / no / uncertain: AI company under the rubric?
+    confidence: float  # 0-1
+    reason: str
+    description: str  # <= 20 words, used as the dashboard one-liner
+    model: str
+    rubric_version: str
+    cost_usd: float | None = None
+
+
 class Filing(BaseModel):
     # Stage 1: Pull
     accession_no: str  # primary key: one Form D = one row
@@ -48,6 +61,12 @@ class Filing(BaseModel):
     homepage_match: str | None = None  # "strong" or "weak"; weak needs both models to confirm identity
     candidate_urls: list[str] | None = None  # every search result considered, for checking
     enrich_note: str | None = None  # how the homepage was matched, or why none was
+
+    # Stage 5-6: Classify + Verify
+    classify_a: Verdict | None = None  # model A, rubric prompt
+    classify_b: Verdict | None = None  # model B, skeptic prompt, different model family
+    final: str | None = None  # ship / review / drop
+    final_reason: str | None = None
 
     # Every stage
     run_id: str

@@ -28,7 +28,7 @@ The pipeline is done for v1 when four consecutive weekly runs hit the precision 
 
 An **AI company** is one whose primary product would not exist without machine learning or LLMs — the model is the product or the core of it, not a feature bolted onto something else. The rubric below is the exact text the classifier receives; changing it changes the signal, so it is versioned.
 
-**Rubric v2** (2026-10-29; v1 was the original text, changed by decisions 18–19 after the golden-set review).
+**Rubric v2** (2026-10-29; v1 was the original text, changed by decisions 19–20 after the golden-set review; "crypto tokens" wording clarified in step 6). The exact text sent to the models lives in `pipeline/rubric_v2.md`.
 
 **Include (any one is sufficient):**
 
@@ -42,7 +42,7 @@ An **AI company** is one whose primary product would not exist without machine l
 - AI appears only as a feature list item ("AI-powered insights") on a product that would work without it, with no named agent doing a core job — a CRM, a marketplace, a logistics network, a bank
 - Services firms, agencies, consultancies, even "AI consultancies"
 - Hardware, chips, robotics, biotech, drug discovery (real AI, wrong lane for this search)
-- Crypto, Web3, or anything whose homepage mentions tokens
+- Crypto, Web3, or anything whose homepage mentions crypto tokens (LLM tokens, as in "tokens per second", do not count)
 - Companies whose homepage leads with Public Sector, Federal, Defense, or National Security as a main focus (a government or defense customer listed among many industries is fine)
 
 **Uncertain:** if the classifier cannot decide from the evidence, the row goes to a review queue, never to the output. Uncertain is a valid answer; a confident guess is not.
