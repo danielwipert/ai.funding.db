@@ -27,7 +27,6 @@ from pipeline.parse import RUNS_DIR, fetch_xml, parse_xml
 CANDIDATES = [
     "deepseek/deepseek-v4-flash",
     "z-ai/glm-5.3",
-    "google/gemma-4-31b-it",
     "openai/gpt-oss-120b",
 ]
 OUT_DIR = RUNS_DIR / "golden-eval"

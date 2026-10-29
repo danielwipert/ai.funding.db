@@ -55,7 +55,8 @@ claimed to be an AI company under the rubric below. First, write the strongest
 honest case that it is NOT an AI company under the rubric (bolted-on AI, a
 services firm, hardware, an excluded vertical, too little evidence, or a
 website that may belong to a different company). Then weigh that case and give
-your own verdict; if the case against fails, say yes.
+your own verdict in "label": "yes" means it IS an AI company under the rubric,
+"no" means it is NOT. If your case against holds, the label is "no".
 
 {RUBRIC}
 
@@ -65,7 +66,7 @@ FIELDS = {
     "same_company": {"type": "string", "enum": ["yes", "no", "uncertain"],
                      "description": "Does the website belong to the company in the filing?"},
     "label": {"type": "string", "enum": ["yes", "no", "uncertain"],
-              "description": "Is it an AI company under the rubric?"},
+              "description": "yes = it IS an AI company under the rubric; no = it is NOT"},
     "confidence": {"type": "number", "description": "A number between 0 and 1, e.g. 0.9"},
     "reason": {"type": "string", "description": "At most 30 words, naming the rubric rule applied"},
     "description": {"type": "string",
