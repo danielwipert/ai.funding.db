@@ -46,6 +46,11 @@ DIRECTORY_DOMAINS = [
     "startengine.com", "wefunder.com", "republic.com", "angel.co", "f6s.com",
     "streetinsider.com", "govtribe.com", "g2.com", "equilar.com", "bizjournals.com",
     "digitaljournal.com", "equityzen.com", "employbl.com", "applytojob.com",
+    # Form D aggregators: they fill the results for brand-new filers
+    "nomas.fyi", "formdsignal.com", "zalwin.com", "vcbeast.com", "arrowintsys.com",
+    "aum13f.com", "altstreet.investments", "disclosurequest.com", "marketunderworld.com",
+    "globaldealflow.com", "dealdata.net", "whojustraised.com", "partnerfacts.com",
+    "noctura.io", "coatifyai.com", "giverscapital.com", "nasaaefd.org", "yelp.com",
 ]
 
 # Words that appear in many company names and say nothing about which company it is.
