@@ -122,6 +122,12 @@ def merge(filings: list[Filing], data: dict, decisions: dict, today: str) -> Cou
             review[filing.cik] = row
             changes["sent to review"] += 1
 
+    # Decision 29: only companies at least one model called AI stay in review
+    for cik, row in list(review.items()):
+        if not any(v["label"] == "yes" for v in row["verdicts"]):
+            review.pop(cik)
+            changes["review rows without a yes removed"] += 1
+
     existing_labels = {json.loads(line)["accession_no"] for line in jsonl_lines(LABELS_PATH)}
     for cik, decision in decisions.items():
         if isinstance(decision, bool):  # YAML reads a bare yes / no as true / false

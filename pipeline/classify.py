@@ -7,8 +7,9 @@ belongs to the company in the filing. Only agreement ships:
 
     ship    both say yes, both confident (>= 0.8), and for a weak homepage
             match both confirm the website is this company's
-    drop    no homepage found, or both say no
-    review  anything else (disagreement, uncertain, low confidence, identity doubt)
+    drop    no homepage found, or neither model says yes
+    review  at least one model says yes, but not a clean ship (disagreement,
+            uncertain, low confidence, identity doubt)
 
 Reads runs/<run_id>/04_enriched.jsonl and writes runs/<run_id>/05_classified.jsonl.
 Needs OPENROUTER_API_KEY in the environment.
@@ -157,9 +158,10 @@ def normalize_confidence(value) -> float:
 
 def decide(a: Verdict, b: Verdict, weak_match: bool) -> tuple[str, str]:
     """Agreement logic: returns (final, reason). The identity check only
-    applies to weak homepage matches (decision 22)."""
-    if a.label == b.label == "no" and min(a.confidence, b.confidence) >= CONFIDENCE_FLOOR:
-        return "drop", "both models: not an AI company"
+    applies to weak homepage matches (decision 22). Only a company that at
+    least one model calls AI can reach the review queue (decision 29)."""
+    if "yes" not in (a.label, b.label):
+        return "drop", "neither model: an AI company"
     if "uncertain" in (a.label, b.label):
         return "review", "a model was uncertain"
     if min(a.confidence, b.confidence) < CONFIDENCE_FLOOR:
