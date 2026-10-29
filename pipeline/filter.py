@@ -20,7 +20,8 @@ from pipeline.models import Filing
 from pipeline.parse import RUNS_DIR, fetch_xml, parse_xml
 
 # Decision 15: "Other" is kept because some AI startups tick the catch-all box.
-KEEP_INDUSTRY_GROUPS = {"Other Technology", "Business Services", "Other"}
+# Decision 17: "Computers" added as cheap insurance.
+KEEP_INDUSTRY_GROUPS = {"Other Technology", "Business Services", "Other", "Computers"}
 # Decision 11: band on amount actually sold.
 MIN_AMOUNT_SOLD = 1_000_000
 MAX_AMOUNT_SOLD = 50_000_000

@@ -81,7 +81,7 @@ python -m pipeline.filter
 - [x] Step 0 — Repo skeleton
 - [x] Step 1 — Pull (`pipeline/pull.py`)
 - [x] Step 2 — Parse (`pipeline/parse.py`)
-- [ ] Step 3 — Structural filter (`pipeline/filter.py`)
+- [x] Step 3 — Structural filter (`pipeline/filter.py`)
 - [ ] Step 4 — Golden set (`labels.jsonl`)
 - [ ] Step 5 — Enrich (`pipeline/enrich.py`)
 - [ ] Step 6 — Classify + Verify (`pipeline/classify.py`)
