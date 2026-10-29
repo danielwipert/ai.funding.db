@@ -93,6 +93,7 @@ One Pydantic record per filing carries through every stage; each stage adds fiel
 | `passed_structural` | 3 Filter | bool | Plus `drop_reason` when false |
 | `homepage_url`, `search_snippet` | 4 Enrich | str | Null allowed; a null homepage forces `uncertain` |
 | `evidence_text` | 4 Enrich | str | Homepage text, capped at \~1,500 words |
+| `homepage_match`, `enrich_note` | 4 Enrich | str | `strong` (name and identity confirmed) or `weak` (name only, or identity only); note says why a homepage is missing |
 | `classify_a` | 5 Classify | Verdict | `{label: yes/no/uncertain, confidence: 0-1, reason: str, rubric_version: str}` |
 | `classify_b` | 6 Verify | Verdict | Same shape, different model and prompt |
 | `final` | 6 Verify | enum | `ship`, `review`, `drop` |
@@ -192,3 +193,4 @@ Decisions made by logic gate on 2026-10-28. Each line: what was decided, why, an
 | 18 | Golden-set labeling | Claude pre-labels 60 from homepages; owner reviews the 20 hard cases | Keeps owner time to ~20–30 min; classifiers are other model families, so less self-grading risk | Build plan (step 4); `labels/golden_set.csv` |
 | 19 | Defense exclusion (rubric v2) | Exclude only when the homepage leads with defense / national security / public sector; a listed government customer is fine | Owner labeled CVAT.ai yes despite a Military & Defense industry listing | What counts as an AI company |
 | 20 | Agents on a regular tool (rubric v2) | Include when named agents perform a core job and the homepage says what they do | Owner labeled CandorIQ, Allstacks, Lexful yes; plain "AI-powered" lines still excluded | What counts as an AI company |
+| 21 | Search provider | Tavily (free 1,000 searches/month, no card; then $0.008/search) | Covers ~240/month weekly runs plus backfill; returns page text as a fallback | Sources; `pipeline/enrich.py` |

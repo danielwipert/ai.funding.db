@@ -41,6 +41,13 @@ class Filing(BaseModel):
     passed_structural: bool | None = None
     drop_reason: str | None = None  # set on every dropped row
 
+    # Stage 4: Enrich
+    homepage_url: str | None = None  # None forces an "uncertain" verdict later
+    search_snippet: str | None = None
+    evidence_text: str | None = None  # homepage text, capped at ~1,500 words
+    homepage_match: str | None = None  # "strong" or "weak"; weak matches go to review
+    enrich_note: str | None = None  # how the homepage was matched, or why none was
+
     # Every stage
     run_id: str
     processed_at: datetime
