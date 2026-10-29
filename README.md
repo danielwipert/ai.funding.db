@@ -78,10 +78,10 @@ python -m pipeline.filter
 
 ## Golden set (step 4)
 
-`labels/golden_draft.csv` holds 60 pre-labeled companies. Review it (hard cases are at the top), change any `label` you disagree with, then turn it into the answer key `labels.jsonl`:
+`labels/golden_set.csv` holds 60 labeled companies (pre-labeled, then reviewed; hard cases at the top). To add more labels later, add rows with `label` = yes or no and re-run the import; rows already in `labels.jsonl` are skipped:
 
 ```bash
-python -m pipeline.labels labels/golden_draft.csv
+python -m pipeline.labels labels/golden_set.csv
 ```
 
 ## Build progress
@@ -90,7 +90,7 @@ python -m pipeline.labels labels/golden_draft.csv
 - [x] Step 1 — Pull (`pipeline/pull.py`)
 - [x] Step 2 — Parse (`pipeline/parse.py`)
 - [x] Step 3 — Structural filter (`pipeline/filter.py`)
-- [ ] Step 4 — Golden set (`labels.jsonl`)
+- [x] Step 4 — Golden set (`labels.jsonl`)
 - [ ] Step 5 — Enrich (`pipeline/enrich.py`)
 - [ ] Step 6 — Classify + Verify (`pipeline/classify.py`)
 - [ ] Step 7 — Merge + data.json (`pipeline/output.py`)

@@ -5,7 +5,7 @@ The sheet is a CSV with one company per row. The only columns you edit are
 labels.jsonl are skipped, so the file stays append-only.
 
 Usage:
-    python -m pipeline.labels labels/golden_draft.csv
+    python -m pipeline.labels labels/golden_set.csv
 """
 
 import argparse
@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LABELS_PATH = ROOT / "labels.jsonl"
-RUBRIC_VERSION = "v1"
+RUBRIC_VERSION = "v2"
 
 
 def import_sheet(sheet_path: Path) -> None:
@@ -37,7 +37,7 @@ def import_sheet(sheet_path: Path) -> None:
                 continue
             out.write(json.dumps({
                 "accession_no": row["accession_no"],
-                "cik": row["cik"],
+                "cik": row["cik"].zfill(10),  # spreadsheets drop leading zeros
                 "company_name": row["company"],
                 "label": label,
                 "category": row["category"],  # clear / hard

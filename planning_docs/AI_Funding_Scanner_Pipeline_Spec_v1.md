@@ -28,19 +28,22 @@ The pipeline is done for v1 when four consecutive weekly runs hit the precision 
 
 An **AI company** is one whose primary product would not exist without machine learning or LLMs — the model is the product or the core of it, not a feature bolted onto something else. The rubric below is the exact text the classifier receives; changing it changes the signal, so it is versioned.
 
+**Rubric v2** (2026-10-29; v1 was the original text, changed by decisions 18–19 after the golden-set review).
+
 **Include (any one is sufficient):**
 
 - Builds or trains models, or sells model access or infrastructure (inference, evals, observability, data labeling, guardrails)
 - Sells a product whose core function is performed by a model: agents, copilots, document intelligence, decisioning, generation, detection, forecasting
 - Describes itself with "AI" or "ML" as the lead noun of the product, and the homepage describes what the model does, not just that it exists
+- Sells a tool where named AI agents perform a core job and the homepage says what work they do, even if the underlying tool would work without them
 
 **Exclude (any one is disqualifying):**
 
-- AI appears only as a feature list item ("AI-powered insights") on a product that would work without it — a CRM, a marketplace, a logistics network, a bank
+- AI appears only as a feature list item ("AI-powered insights") on a product that would work without it, with no named agent doing a core job — a CRM, a marketplace, a logistics network, a bank
 - Services firms, agencies, consultancies, even "AI consultancies"
 - Hardware, chips, robotics, biotech, drug discovery (real AI, wrong lane for this search)
 - Crypto, Web3, or anything whose homepage mentions tokens
-- Companies with a Public Sector, Federal, Defense, or National Security vertical on the homepage
+- Companies whose homepage leads with Public Sector, Federal, Defense, or National Security as a main focus (a government or defense customer listed among many industries is fine)
 
 **Uncertain:** if the classifier cannot decide from the evidence, the row goes to a review queue, never to the output. Uncertain is a valid answer; a confident guess is not.
 
@@ -139,7 +142,7 @@ Ten steps, in order, each ending with something that runs. No step opens until t
 - [x] **Step 1 — Pull (1 hr).** `pull.py`: hit the EDGAR full-text search for `forms=D` over a date range, page through results, write `01_filings.jsonl` with accession, CIK, name, filing date. Done when a 7-day pull returns a few hundred rows and a re-run is idempotent. (First test, 2026-10-21 to 10-27: 1,266 filings including D/A, ~5 seconds; re-run identical.)
 - [x] **Step 2 — Parse (2 hrs).** `parse.py`: fetch each filing's `primary_doc.xml`, map the fields in the data model, respect the rate limit, cache every XML locally. Done when every row has amount, industry group, state, and related persons, and a second run fetches nothing new. (First test, same week: 1,266 parsed, 0 errors, ~3 min; re-run downloaded 0.)
 - [x] **Step 3 — Structural filter (30 min).** `filter.py`: apply industry group, amount band, amendment rule. Write `drop_reason` on every dropped row. Done when the survivor count is 30–80 for a 7-day window and spot-checking 10 drops shows no AI company among them. (First test, same week: 66 survivors; AI-named drops were all outside the amount band, by design.)
-- [ ] **Step 4 — Golden set (1.5 hrs).** Hand-label 60 survivors from a backfill pull into `labels.jsonl`. Done before any prompt is written, so the prompt is tested against labels it did not see.
+- [x] **Step 4 — Golden set (1.5 hrs).** Hand-label 60 survivors from a backfill pull into `labels.jsonl`. Done before any prompt is written, so the prompt is tested against labels it did not see.
 - [ ] **Step 5 — Enrich (2 hrs).** `enrich.py`: one web search per survivor, pick the homepage, fetch and strip it to text, cap length. Done when ≥ 80% of survivors have `evidence_text` and the rest are marked null.
 - [ ] **Step 6 — Classify + Verify (2 hrs).** `classify.py`: rubric v1 as a prompt, Pydantic-validated JSON verdict, model A then model B, agreement logic, review routing. Done when precision on the golden set is ≥ 95% and the review queue holds the hard cases, not the easy ones.
 - [ ] **Step 7 — Merge + data.json (1 hr).** `output.py`: dedupe on CIK against the existing `data.json`, apply the amount-update rule, merge `tracking.yml`, write `dashboard/data.json` and a run summary (counts per stage, cost, runtime). Done when a second run changes nothing it shouldn't.
@@ -186,3 +189,6 @@ Decisions made by logic gate on 2026-10-28. Each line: what was decided, why, an
 | 15 | Industry groups kept | `Other Technology`, `Business Services`, `Other` | Some AI startups tick the catch-all `Other`; ~55/week stays inside the 30–80 target and the classifiers drop the rest for cents | Sources; `pipeline/filter.py` |
 | 16 | Amendment comparison | Compare a `D/A`'s `amount_sold` to the filing it amends (`previous_accession_no`); keep only if it rose | Accurate, catches rounds that grow after first filing; ~10 extra cached downloads/week | Data model; `pipeline/filter.py` |
 | 17 | Add `Computers` industry group | Keep `Computers` too | Near-free insurance: 3 filings in the test week, none in band; some AI companies may pick it | Sources; `pipeline/filter.py` |
+| 18 | Golden-set labeling | Claude pre-labels 60 from homepages; owner reviews the 20 hard cases | Keeps owner time to ~20–30 min; classifiers are other model families, so less self-grading risk | Build plan (step 4); `labels/golden_set.csv` |
+| 19 | Defense exclusion (rubric v2) | Exclude only when the homepage leads with defense / national security / public sector; a listed government customer is fine | Owner labeled CVAT.ai yes despite a Military & Defense industry listing | What counts as an AI company |
+| 20 | Agents on a regular tool (rubric v2) | Include when named agents perform a core job and the homepage says what they do | Owner labeled CandorIQ, Allstacks, Lexful yes; plain "AI-powered" lines still excluded | What counts as an AI company |
