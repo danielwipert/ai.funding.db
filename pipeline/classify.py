@@ -34,10 +34,10 @@ OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 RUBRIC_VERSION = "v2"
 RUBRIC = (Path(__file__).parent / f"rubric_{RUBRIC_VERSION}.md").read_text()
 
-# Picked in step 6 by pipeline/evaluate.py against the golden set (decision 26):
-# 100% precision, 71% recall on 43 labeled companies with a homepage.
-MODEL_A = "deepseek/deepseek-v4-flash"
-MODEL_B = "openai/gpt-oss-120b"
+# Picked by pipeline/evaluate.py against the golden set (decision 28): 100%
+# precision and 65% recall in two separate evaluations, 43 companies each.
+MODEL_A = "z-ai/glm-5.3"
+MODEL_B = "deepseek/deepseek-v4-flash"
 CONFIDENCE_FLOOR = 0.8
 
 CLASSIFIER_PROMPT = f"""You classify companies for a scanner that finds newly funded AI companies.

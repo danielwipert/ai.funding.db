@@ -139,6 +139,6 @@ python -m pipeline.labels labels/golden_set.csv
 - [x] Step 5 — Enrich (`pipeline/enrich.py`)
 - [x] Step 6 — Classify + Verify (`pipeline/classify.py`)
 - [x] Step 7 — Merge + data.json (`pipeline/output.py`)
-- [ ] Step 8 — Dashboard (`dashboard/index.html`)
+- [x] Step 8 — Dashboard (`dashboard/index.html`)
 - [ ] Step 9 — Weekly Actions workflow
 - [ ] Step 10 — Audit routine
