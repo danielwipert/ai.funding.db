@@ -147,7 +147,9 @@ def match_strength(url: str, text: str, filing: Filing) -> str | None:
     if match is None:
         return None
     person, city = names_a_person(text, filing), names_the_city(text, filing)
-    if match == "full" and (person or city or len(joined_name(filing.company_name)) >= 8):
+    name_length = len(joined_name(filing.company_name))
+    # A city mention only confirms names long enough to be rare ("eiwa" is not)
+    if match == "full" and (person or (city and name_length >= 6) or name_length >= 8):
         return "strong"
     if match == "partial" and person:
         return "strong"
