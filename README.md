@@ -111,6 +111,14 @@ python -m pipeline.output
 
 The pipeline reads both files and never writes to them.
 
+## Weekly audit
+
+About 20 minutes each week; the steps are in [`planning_docs/audit_routine.md`](planning_docs/audit_routine.md). To make the checklist:
+
+```bash
+python -m pipeline.audit
+```
+
 ## Testing models
 
 To re-test models or prompts against the golden set (writes `runs/golden-eval/report.md`):
