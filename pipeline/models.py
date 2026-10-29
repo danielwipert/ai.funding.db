@@ -42,7 +42,7 @@ class Filing(BaseModel):
     drop_reason: str | None = None  # set on every dropped row
 
     # Stage 4: Enrich
-    homepage_url: str | None = None  # None forces an "uncertain" verdict later
+    homepage_url: str | None = None  # None after two searches: dropped as "no homepage found"
     search_snippet: str | None = None
     evidence_text: str | None = None  # homepage text, capped at ~1,500 words
     homepage_match: str | None = None  # "strong" or "weak"; weak needs both models to confirm identity

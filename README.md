@@ -76,6 +76,18 @@ Then apply the structural filter (writes `03_filtered.jsonl`; every row is kept,
 python -m pipeline.filter
 ```
 
+Then find each survivor's homepage (writes `04_enriched.jsonl`; needs a free Tavily key from https://app.tavily.com):
+
+```bash
+export TAVILY_API_KEY=tvly-...
+```
+
+```bash
+python -m pipeline.enrich
+```
+
+On GitHub, the **Pipeline test run** workflow (Actions tab) runs all of the above with the repository secrets and lets you download the results.
+
 ## Golden set (step 4)
 
 `labels/golden_set.csv` holds 60 labeled companies (pre-labeled, then reviewed; hard cases at the top). To add more labels later, add rows with `label` = yes or no and re-run the import; rows already in `labels.jsonl` are skipped:
@@ -91,7 +103,7 @@ python -m pipeline.labels labels/golden_set.csv
 - [x] Step 2 — Parse (`pipeline/parse.py`)
 - [x] Step 3 — Structural filter (`pipeline/filter.py`)
 - [x] Step 4 — Golden set (`labels.jsonl`)
-- [ ] Step 5 — Enrich (`pipeline/enrich.py`)
+- [x] Step 5 — Enrich (`pipeline/enrich.py`)
 - [ ] Step 6 — Classify + Verify (`pipeline/classify.py`)
 - [ ] Step 7 — Merge + data.json (`pipeline/output.py`)
 - [ ] Step 8 — Dashboard (`dashboard/index.html`)
