@@ -2,9 +2,10 @@
 
 One Tavily web search per company finds the homepage; the page is fetched
 and stripped to plain text, capped at ~1,500 words. A homepage is only
-accepted when its domain matches the company name or its text mentions the
-company or a related person; otherwise homepage_url stays None, which later
-forces an "uncertain" verdict (evidence or nothing).
+accepted when its domain looks like the company name; it is a "strong" match
+when the page also names a related person or the city (or the domain is a
+long, distinctive name), otherwise "weak". With no match, homepage_url stays
+None, which later forces an "uncertain" verdict (evidence or nothing).
 
 Reads runs/<run_id>/03_filtered.jsonl and writes runs/<run_id>/04_enriched.jsonl.
 Needs TAVILY_API_KEY in the environment.
@@ -41,6 +42,8 @@ DIRECTORY_DOMAINS = [
     "owler.com", "builtin.com", "techcrunch.com", "prnewswire.com", "businesswire.com",
     "globenewswire.com", "medium.com", "github.com", "reddit.com", "formds.com",
     "startengine.com", "wefunder.com", "republic.com", "angel.co", "f6s.com",
+    "streetinsider.com", "govtribe.com", "g2.com", "equilar.com", "bizjournals.com",
+    "digitaljournal.com", "equityzen.com", "employbl.com", "applytojob.com",
 ]
 
 # Words that appear in many company names and say nothing about which company it is.
@@ -64,6 +67,8 @@ def domain_of(url: str) -> str:
 
 def is_directory(url: str) -> bool:
     domain = domain_of(url)
+    if domain.endswith(".gov") or ".gov." in domain:  # government sites are never a startup's homepage
+        return True
     return any(domain == d or domain.endswith("." + d) for d in DIRECTORY_DOMAINS)
 
 
@@ -108,18 +113,18 @@ def confirms_identity(text: str, filing: Filing) -> bool:
 
 
 def match_strength(url: str, text: str, filing: Filing) -> str | None:
-    """"strong", "weak", or None when the page doesn't look like this company."""
-    names_company = domain_matches_name(url, filing.company_name) or page_mentions(
-        text, [" ".join(distinctive_words(filing.company_name))]
-    )
-    confirmed = confirms_identity(text, filing)
-    if names_company and confirmed:
+    """"strong", "weak", or None when the site isn't this company's own.
+
+    The domain must look like the company name: news and filing-aggregator
+    pages also mention the name, city and people, so page text alone proves
+    nothing. Renamed companies (domain unlike the legal name) get None and
+    go to review.
+    """
+    if not domain_matches_name(url, filing.company_name):
+        return None
+    if confirms_identity(text, filing) or domain_is_distinctive_name(url, filing.company_name):
         return "strong"
-    if domain_is_distinctive_name(url, filing.company_name):
-        return "strong"
-    if names_company or confirmed:
-        return "weak"
-    return None
+    return "weak"
 
 
 def search(filing: Filing) -> list[dict]:
@@ -170,6 +175,7 @@ def enrich_one(filing: Filing) -> dict:
     results = [r for r in results if not is_directory(r["url"])]
     if not results:
         return {"enrich_note": "no search results outside directory sites"}
+    candidates = {"candidate_urls": [r["url"] for r in results]}
 
     weak = None
     for result in results:
@@ -188,14 +194,15 @@ def enrich_one(filing: Filing) -> dict:
             "enrich_note": f"{strength} match",
         }
         if strength == "strong":
-            return fields
+            return {**fields, **candidates}
         weak = weak or fields  # keep the best weak match in case nothing strong turns up
     if weak:
-        return weak
+        return {**weak, **candidates}
 
     return {
         "search_snippet": results[0].get("content"),
-        "enrich_note": "no result matched the company; left for review",
+        "enrich_note": "no result's domain matched the company name; left for review",
+        **candidates,
     }
 
 

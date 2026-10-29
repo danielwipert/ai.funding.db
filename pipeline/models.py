@@ -45,7 +45,8 @@ class Filing(BaseModel):
     homepage_url: str | None = None  # None forces an "uncertain" verdict later
     search_snippet: str | None = None
     evidence_text: str | None = None  # homepage text, capped at ~1,500 words
-    homepage_match: str | None = None  # "strong" or "weak"; weak matches go to review
+    homepage_match: str | None = None  # "strong" or "weak"; weak needs both models to confirm identity
+    candidate_urls: list[str] | None = None  # every search result considered, for checking
     enrich_note: str | None = None  # how the homepage was matched, or why none was
 
     # Every stage
