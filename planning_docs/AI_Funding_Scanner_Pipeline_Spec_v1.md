@@ -59,7 +59,7 @@ EDGAR Form D is the only primary source; everything else enriches a name EDGAR a
 | LinkedIn company page | Enrichment, optional | Headcount band, HQ | Blocks scraping; manual lookup only | Manual |
 | Crunchbase / newsletter deal lists | Validation only | A weekly list of announced rounds to measure recall against | Lags EDGAR by days to weeks | Free tier |
 
-Two Form D fields do most of the pre-filtering. **Industry Group** keeps `Other Technology` and `Business Services` and drops `Real Estate`, `Oil and Gas`, `Banking`, `Pooled Investment Fund` and the rest (funds file Form D constantly and are the largest source of noise). **Amount Sold** keeps $1M–$50M (`offering_total` can be a placeholder, so it is not used). Both are structural fields, so they never need a model.
+Two Form D fields do most of the pre-filtering. **Industry Group** keeps `Other Technology`, `Business Services` and `Other` (decision 15) and drops `Real Estate`, `Oil and Gas`, `Banking`, `Pooled Investment Fund` and the rest (funds file Form D constantly and are the largest source of noise). **Amount Sold** keeps $1M–$50M (`offering_total` can be a placeholder, so it is not used). Both are structural fields, so they never need a model.
 
 Geography is US only for v1 (decision 10). Form D only covers US issuers; adding UK/EU means Companies House or Dealroom, a different build.
 
@@ -85,6 +85,7 @@ One Pydantic record per filing carries through every stage; each stage adds fiel
 | `state`, `city` | 2 Parse | str | Issuer address |
 | `related_persons` | 2 Parse | list\[Person\] | Name + relationship (Executive Officer, Director, Promoter); these are the outreach targets |
 | `is_amendment` | 2 Parse | bool | `D/A` filings are dropped unless `amount_sold` rose |
+| `previous_accession_no` | 2 Parse | str | The filing a `D/A` amends; its `amount_sold` is the comparison for the amendment rule |
 | `parse_error` | 2 Parse | str | Null unless the XML could not be fetched or read |
 | `passed_structural` | 3 Filter | bool | Plus `drop_reason` when false |
 | `homepage_url`, `search_snippet` | 4 Enrich | str | Null allowed; a null homepage forces `uncertain` |
@@ -182,3 +183,5 @@ Decisions made by logic gate on 2026-10-28. Each line: what was decided, why, an
 | 12 | Models A and B | Two open-weight models from different families via one host (e.g. OpenRouter); exact models chosen in step 6 against the golden set | Value: good results, low price; family difference keeps verification independent | Precision controls; Open decisions |
 | 13 | Repo visibility | Public repo, GitHub Pages, notes included in `tracking.yml` | Free hosting and Actions; private repo would still have a public Pages site. Accepted: notes are public, including git history | Build plan; Open decisions |
 | 14 | EDGAR contact | Personal email in the User-Agent, read from the `EDGAR_CONTACT_EMAIL` repository secret / env var | SEC requires contact details; owner is fine with SEC knowing; keeps it out of the public code | Build plan (step 1); `pipeline/edgar.py` |
+| 15 | Industry groups kept | `Other Technology`, `Business Services`, `Other` | Some AI startups tick the catch-all `Other`; ~55/week stays inside the 30–80 target and the classifiers drop the rest for cents | Sources; `pipeline/filter.py` |
+| 16 | Amendment comparison | Compare a `D/A`'s `amount_sold` to the filing it amends (`previous_accession_no`); keep only if it rose | Accurate, catches rounds that grow after first filing; ~10 extra cached downloads/week | Data model; `pipeline/filter.py` |

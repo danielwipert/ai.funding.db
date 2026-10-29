@@ -30,12 +30,12 @@ def xml_url(cik: str, accession_no: str) -> str:
     )
 
 
-def fetch_xml(filing: Filing) -> tuple[bytes, bool]:
-    """Return the filing's XML and whether it had to be downloaded."""
-    cache_path = CACHE_DIR / f"{filing.accession_no}.xml"
+def fetch_xml(cik: str, accession_no: str) -> tuple[bytes, bool]:
+    """Return a filing's XML and whether it had to be downloaded."""
+    cache_path = CACHE_DIR / f"{accession_no}.xml"
     if cache_path.exists():
         return cache_path.read_bytes(), False
-    data = get_bytes(xml_url(filing.cik, filing.accession_no))
+    data = get_bytes(xml_url(cik, accession_no))
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_bytes(data)
     return data, True
@@ -81,6 +81,7 @@ def parse_xml(data: bytes) -> dict:
         "city": text(root, "primaryIssuer/issuerAddress/city"),
         "related_persons": [parse_person(p) for p in root.iterfind("relatedPersonsList/relatedPersonInfo")],
         "is_amendment": text(root, "offeringData/typeOfFiling/newOrAmendment/isAmendment") == "true",
+        "previous_accession_no": text(root, "offeringData/typeOfFiling/newOrAmendment/previousAccessionNumber"),
     }
 
 
@@ -94,7 +95,7 @@ def parse(run_id: str) -> Path:
     with out_path.open("w") as out:
         for i, filing in enumerate(filings, start=1):
             try:
-                data, was_downloaded = fetch_xml(filing)
+                data, was_downloaded = fetch_xml(filing.cik, filing.accession_no)
                 downloaded += was_downloaded
                 fields = parse_xml(data)
             except (requests.RequestException, ET.ParseError, ValueError) as e:

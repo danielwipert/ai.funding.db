@@ -34,7 +34,12 @@ class Filing(BaseModel):
     city: str | None = None
     related_persons: list[Person] | None = None
     is_amendment: bool | None = None
+    previous_accession_no: str | None = None  # the filing a D/A amends
     parse_error: str | None = None  # set when the XML could not be fetched or read
+
+    # Stage 3: Filter
+    passed_structural: bool | None = None
+    drop_reason: str | None = None  # set on every dropped row
 
     # Every stage
     run_id: str

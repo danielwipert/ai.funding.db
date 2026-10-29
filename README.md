@@ -70,6 +70,12 @@ python -m pipeline.parse
 
 If you used `--run-id` on the pull, pass the same one here.
 
+Then apply the structural filter (writes `03_filtered.jsonl`; every row is kept, dropped ones carry a `drop_reason`):
+
+```bash
+python -m pipeline.filter
+```
+
 ## Build progress
 
 - [x] Step 0 — Repo skeleton
