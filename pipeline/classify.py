@@ -88,39 +88,58 @@ def evidence_message(facts: dict, evidence: str, snippet: str | None) -> str:
     )
 
 
+def parse_json(content: str | None) -> dict:
+    """Read the JSON answer, tolerating ```json fences or text around it."""
+    if not content:
+        raise ValueError("empty reply")
+    start, end = content.find("{"), content.rfind("}")
+    if start == -1 or end < start:
+        raise ValueError("no JSON object in reply")
+    return json.loads(content[start:end + 1])
+
+
 def call_model(model: str, skeptic: bool, message: str) -> Verdict:
-    """Ask one model for a verdict; errors become an "uncertain" verdict so the row goes to review."""
+    """Ask one model for a verdict, with one retry; errors become an
+    "uncertain" verdict so the row goes to review."""
+    error = None
+    for _attempt in range(2):
+        try:
+            return ask_once(model, skeptic, message)
+        except (requests.RequestException, KeyError, ValueError, TypeError) as e:
+            error = e
+    return Verdict(same_company="uncertain", label="uncertain", confidence=0, description="",
+                   reason=f"model call failed: {type(error).__name__}: {str(error)[:80]}",
+                   model=model, rubric_version=RUBRIC_VERSION)
+
+
+def ask_once(model: str, skeptic: bool, message: str) -> Verdict:
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
         raise SystemExit("Set OPENROUTER_API_KEY first.")
-    try:
-        response = requests.post(
-            OPENROUTER_URL,
-            headers={"Authorization": f"Bearer {api_key}"},
-            json={
-                "model": model,
-                "messages": [
-                    {"role": "system", "content": SKEPTIC_PROMPT if skeptic else CLASSIFIER_PROMPT},
-                    {"role": "user", "content": message},
-                ],
-                "temperature": 0,
-                "reasoning": {"effort": "low"},  # a yes/no call needs little thinking; keeps it fast and cheap
-                "max_tokens": 4000,
-                "response_format": {"type": "json_schema", "json_schema": {
-                    "name": "verdict", "strict": True, "schema": schema(skeptic)}},
-                "provider": {"require_parameters": True},  # only hosts that enforce the schema
-                "usage": {"include": True},
-            },
-            timeout=120,
-        )
-        response.raise_for_status()
-        body = response.json()
-        data = json.loads(body["choices"][0]["message"]["content"])
-        cost = (body.get("usage") or {}).get("cost")
-        return Verdict(**{k: data[k] for k in FIELDS}, model=model, rubric_version=RUBRIC_VERSION, cost_usd=cost)
-    except (requests.RequestException, KeyError, ValueError, TypeError) as e:
-        return Verdict(same_company="uncertain", label="uncertain", confidence=0, description="",
-                       reason=f"model call failed: {type(e).__name__}", model=model, rubric_version=RUBRIC_VERSION)
+    response = requests.post(
+        OPENROUTER_URL,
+        headers={"Authorization": f"Bearer {api_key}"},
+        json={
+            "model": model,
+            "messages": [
+                {"role": "system", "content": SKEPTIC_PROMPT if skeptic else CLASSIFIER_PROMPT},
+                {"role": "user", "content": message},
+            ],
+            "temperature": 0,
+            "reasoning": {"effort": "low"},  # a yes/no call needs little thinking; keeps it fast and cheap
+            "max_tokens": 8000,  # room for thinking plus the answer, so replies are not cut off
+            "response_format": {"type": "json_schema", "json_schema": {
+                "name": "verdict", "strict": True, "schema": schema(skeptic)}},
+            "provider": {"require_parameters": True},  # only hosts that enforce the schema
+            "usage": {"include": True},
+        },
+        timeout=120,
+    )
+    response.raise_for_status()
+    body = response.json()
+    data = parse_json(body["choices"][0]["message"]["content"])
+    cost = (body.get("usage") or {}).get("cost")
+    return Verdict(**{k: data[k] for k in FIELDS}, model=model, rubric_version=RUBRIC_VERSION, cost_usd=cost)
 
 
 def decide(a: Verdict, b: Verdict, weak_match: bool) -> tuple[str, str]:
