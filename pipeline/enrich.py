@@ -2,9 +2,9 @@
 
 One Tavily web search per company finds the homepage; the page is fetched
 and stripped to plain text, capped at ~1,500 words. A homepage is only
-accepted when its domain looks like the company name; it is a "strong" match
-when the page also names a related person or the city (or the domain is a
-long, distinctive name), otherwise "weak". With no match, homepage_url stays
+accepted when its domain starts with the company name (or a distinctive word
+of it); it is a "strong" match when the page also names a related person or
+the city (or the domain is a long, distinctive name), otherwise "weak". With no match, homepage_url stays
 None, which later forces an "uncertain" verdict (evidence or nothing).
 
 Reads runs/<run_id>/03_filtered.jsonl and writes runs/<run_id>/04_enriched.jsonl.
@@ -52,7 +52,12 @@ LEGAL_SUFFIXES = {"inc", "incorporated", "corp", "corporation", "co", "llc", "lt
 GENERIC_WORDS = {"data", "health", "software", "network", "networks", "capital", "partners",
                  "solutions", "systems", "analytics", "labs", "global", "energy", "intelligence",
                  "technologies", "technology", "ventures", "fund", "investment", "smart",
-                 "digital", "cloud", "media", "services", "international", "america", "usa"}
+                 "digital", "cloud", "media", "services", "international", "america", "usa",
+                 "insurance", "medical", "education", "industries", "therapeutics", "diagnostics",
+                 "metals", "minerals", "brands", "studios", "school", "finance", "financial",
+                 "real", "estate", "water", "motors", "foods", "series", "innovations"}
+# Startup domains often add a prefix: tryiris.ai, getacme.com, heyiris.ai.
+DOMAIN_PREFIXES = ("get", "try", "hey", "use", "join", "meet", "with", "go")
 
 
 def name_tokens(company_name: str) -> list[str]:
@@ -86,19 +91,34 @@ def distinctive_words(company_name: str) -> list[str]:
     return [t for t in name_tokens(company_name) if len(t) >= 4 and t not in GENERIC_WORDS and t != "ai"]
 
 
-def domain_matches_name(url: str, company_name: str) -> bool:
-    """True when the domain looks like the company's name (weak on its own)."""
-    label, joined = domain_label(url), joined_name(company_name)
-    if joined and (joined in label or (len(label) >= 5 and joined.startswith(label))):
-        return True
-    return any(t in label for t in distinctive_words(company_name))
+def label_cores(url: str) -> list[str]:
+    """The domain label, plus the label without a common startup prefix
+    ("tryiris" -> also "iris")."""
+    label = domain_label(url)
+    cores = [label]
+    for prefix in DOMAIN_PREFIXES:
+        if label.startswith(prefix) and len(label) - len(prefix) >= 3:
+            cores.append(label[len(prefix):])
+    return cores
 
 
-def domain_is_distinctive_name(url: str, company_name: str) -> bool:
-    """True when the domain contains the full name and it is long enough to be
-    unlikely to belong to another company ("agentsmyth", not "relay")."""
+def name_match(url: str, company_name: str) -> str | None:
+    """How the domain matches the name: "full" (starts with the whole name),
+    "partial" (starts with one distinctive name word), or None.
+
+    Matching only at the start keeps "prokopinsurance.com" from matching
+    "Slingshot Insurance"."""
     joined = joined_name(company_name)
-    return len(joined) >= 8 and joined in domain_label(url)
+    for core in label_cores(url):
+        if joined and core.startswith(joined):
+            return "full"
+    for core in label_cores(url):
+        # "femto" for Femtosense: the domain is the start of the name
+        if joined and len(core) >= 5 and joined.startswith(core):
+            return "partial"
+        if any(core.startswith(t) for t in distinctive_words(company_name)):
+            return "partial"
+    return None
 
 
 def page_mentions(text: str, words: list[str]) -> bool:
@@ -106,10 +126,13 @@ def page_mentions(text: str, words: list[str]) -> bool:
     return any(len(w) >= 4 and re.search(rf"\b{re.escape(w.lower())}\b", lowered) for w in words)
 
 
-def confirms_identity(text: str, filing: Filing) -> bool:
-    """True when the page names a related person (last name) or the filing's city."""
+def names_a_person(text: str, filing: Filing) -> bool:
     last_names = [p.name.split()[-1] for p in filing.related_persons or [] if p.name]
-    return page_mentions(text, last_names) or bool(filing.city and filing.city.lower() in text.lower())
+    return page_mentions(text, last_names)
+
+
+def names_the_city(text: str, filing: Filing) -> bool:
+    return bool(filing.city and filing.city.lower() in text.lower())
 
 
 def match_strength(url: str, text: str, filing: Filing) -> str | None:
@@ -120,9 +143,13 @@ def match_strength(url: str, text: str, filing: Filing) -> str | None:
     nothing. Renamed companies (domain unlike the legal name) get None and
     go to review.
     """
-    if not domain_matches_name(url, filing.company_name):
+    match = name_match(url, filing.company_name)
+    if match is None:
         return None
-    if confirms_identity(text, filing) or domain_is_distinctive_name(url, filing.company_name):
+    person, city = names_a_person(text, filing), names_the_city(text, filing)
+    if match == "full" and (person or city or len(joined_name(filing.company_name)) >= 8):
+        return "strong"
+    if match == "partial" and person:
         return "strong"
     return "weak"
 
@@ -132,12 +159,14 @@ def search(filing: Filing) -> list[dict]:
     api_key = os.environ.get("TAVILY_API_KEY")
     if not api_key:
         raise SystemExit("Set TAVILY_API_KEY first (free key at https://app.tavily.com).")
-    name = re.sub(r"\(.*?\)", "", filing.company_name).strip()
+    # Drop "(CIK ...)", tickers and legal suffixes: "Overwatch Data, Inc." -> "Overwatch Data"
+    words = re.sub(r"\(.*?\)", " ", filing.company_name).replace(",", " ").split()
+    name = " ".join(w for w in words if w.lower().strip(".") not in LEGAL_SUFFIXES)
     response = requests.post(
         TAVILY_URL,
         headers={"Authorization": f"Bearer {api_key}"},
         json={
-            "query": f'"{name}" {filing.city or ""} {filing.state or ""} company website',
+            "query": f"{name} {filing.city or ''} {filing.state or ''} official website",
             "search_depth": "basic",  # 1 credit
             "max_results": 8,
             "include_raw_content": "text",  # fallback when we can't fetch the page ourselves
