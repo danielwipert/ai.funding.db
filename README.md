@@ -86,6 +86,22 @@ export TAVILY_API_KEY=tvly-...
 python -m pipeline.enrich
 ```
 
+Then classify and verify with two AI models (writes `05_classified.jsonl` with a final `ship` / `review` / `drop` per company; needs an OpenRouter key):
+
+```bash
+export OPENROUTER_API_KEY=sk-or-...
+```
+
+```bash
+python -m pipeline.classify
+```
+
+To re-test models or prompts against the golden set (writes `runs/golden-eval/report.md`):
+
+```bash
+python -m pipeline.evaluate
+```
+
 On GitHub, the **Pipeline test run** workflow (Actions tab) runs all of the above with the repository secrets and lets you download the results.
 
 ## Golden set (step 4)
@@ -104,7 +120,7 @@ python -m pipeline.labels labels/golden_set.csv
 - [x] Step 3 — Structural filter (`pipeline/filter.py`)
 - [x] Step 4 — Golden set (`labels.jsonl`)
 - [x] Step 5 — Enrich (`pipeline/enrich.py`)
-- [ ] Step 6 — Classify + Verify (`pipeline/classify.py`)
+- [x] Step 6 — Classify + Verify (`pipeline/classify.py`)
 - [ ] Step 7 — Merge + data.json (`pipeline/output.py`)
 - [ ] Step 8 — Dashboard (`dashboard/index.html`)
 - [ ] Step 9 — Weekly Actions workflow
