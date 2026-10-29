@@ -1,0 +1,8 @@
+# Weekly review decisions, edited by hand. One line per company, keyed on CIK
+# (shown on the dashboard's "Needs review" table):
+#
+#   "0002054765": yes    # it is an AI company: move it to the main table
+#   "0002160850": no     # not an AI company: remove it from review
+#
+# The next run applies each decision once and adds it to labels.jsonl
+# (the golden set). The pipeline never edits this file.

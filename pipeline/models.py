@@ -61,6 +61,7 @@ class Filing(BaseModel):
     homepage_match: str | None = None  # "strong" or "weak"; weak needs both models to confirm identity
     candidate_urls: list[str] | None = None  # every search result considered, for checking
     enrich_note: str | None = None  # how the homepage was matched, or why none was
+    searches: int | None = None  # Tavily searches used (1 or 2)
 
     # Stage 5-6: Classify + Verify
     classify_a: Verdict | None = None  # model A, rubric prompt

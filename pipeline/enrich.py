@@ -249,16 +249,17 @@ def enrich_one(filing: Filing) -> dict:
     "no homepage found"; the classify stage drops it with that reason.
     """
     seen_urls: list[str] = []
-    for query in queries(filing):
+    for searches, query in enumerate(queries(filing), start=1):
         try:
             results = search(query)
         except requests.RequestException as e:
-            return {"enrich_note": f"search failed: {type(e).__name__}", "candidate_urls": seen_urls}
+            return {"enrich_note": f"search failed: {type(e).__name__}", "candidate_urls": seen_urls,
+                    "searches": searches}
         seen_urls += [r["url"] for r in results]
         fields = pick_homepage(results, filing)
         if fields:
-            return {**fields, "candidate_urls": seen_urls}
-    return {"enrich_note": "no homepage found", "candidate_urls": seen_urls}
+            return {**fields, "candidate_urls": seen_urls, "searches": searches}
+    return {"enrich_note": "no homepage found", "candidate_urls": seen_urls, "searches": searches}
 
 
 def enrich(run_id: str) -> None:

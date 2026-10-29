@@ -19,6 +19,8 @@ The full design is in [`planning_docs/AI_Funding_Scanner_Pipeline_Spec_v1.md`](p
 | `dashboard/` | The web page (`index.html`) and the data it shows (`data.json`) |
 | `runs/` | One dated folder per run, e.g. `runs/2026-11-01/`. Only `summary.json` files are committed |
 | `tracking.yml` | Your outreach notes, one entry per company (CIK). The pipeline never edits this |
+| `review.yml` | Your yes/no decisions on companies the models couldn't agree on. The pipeline never edits this |
+| `labels.jsonl`, `labels/` | The golden set (answer key) used to test the classifiers |
 | `requirements.txt` | Python packages the pipeline needs |
 | `.github/workflows/` | GitHub Actions: deploys the dashboard to Pages |
 
@@ -96,6 +98,21 @@ export OPENROUTER_API_KEY=sk-or-...
 python -m pipeline.classify
 ```
 
+Then merge the run into the dashboard data and write the run summary (`runs/<run>/summary.json`):
+
+```bash
+python -m pipeline.output
+```
+
+## Your two files
+
+- **`tracking.yml`**: your outreach notes, one entry per company (CIK): `contacted: true` and a `note`.
+- **`review.yml`**: your decisions on the dashboard's "Needs review" companies, one line per CIK: `yes` (AI company, moves to the main table) or `no`. Each decision is also added to the golden set.
+
+The pipeline reads both files and never writes to them.
+
+## Testing models
+
 To re-test models or prompts against the golden set (writes `runs/golden-eval/report.md`):
 
 ```bash
@@ -121,7 +138,7 @@ python -m pipeline.labels labels/golden_set.csv
 - [x] Step 4 — Golden set (`labels.jsonl`)
 - [x] Step 5 — Enrich (`pipeline/enrich.py`)
 - [x] Step 6 — Classify + Verify (`pipeline/classify.py`)
-- [ ] Step 7 — Merge + data.json (`pipeline/output.py`)
+- [x] Step 7 — Merge + data.json (`pipeline/output.py`)
 - [ ] Step 8 — Dashboard (`dashboard/index.html`)
 - [ ] Step 9 — Weekly Actions workflow
 - [ ] Step 10 — Audit routine

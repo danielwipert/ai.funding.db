@@ -61,6 +61,9 @@ jobs:
       - name: 5-6 Classify + Verify
         if: inputs.task != 'golden-eval'
         run: python -m pipeline.classify --run-id $RUN_ID
+      - name: 7 Output (data.json + summary; not committed in test runs)
+        if: inputs.task != 'golden-eval'
+        run: python -m pipeline.output --run-id $RUN_ID
 
       - uses: actions/upload-artifact@v4
         if: always()

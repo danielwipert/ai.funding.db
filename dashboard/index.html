@@ -12,11 +12,11 @@
 <body>
   <h1>AI Funding Scanner</h1>
   <p>Placeholder page. The dashboard table arrives in build step 8.</p>
-  <p>Rows in <code>data.json</code>: <span id="count">loading…</span></p>
+  <p>Companies in <code>data.json</code>: <span id="count">loading…</span></p>
   <script>
     fetch("data.json")
       .then(r => r.json())
-      .then(rows => { document.getElementById("count").textContent = rows.length; })
+      .then(data => { document.getElementById("count").textContent = data.companies.length; })
       .catch(() => { document.getElementById("count").textContent = "could not load"; });
   </script>
 </body>
