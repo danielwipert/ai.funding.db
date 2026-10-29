@@ -1,0 +1,77 @@
+# The weekly pipeline run: Mondays ~6am Central, on the prior 7 days of
+# Form D filings. Commits dashboard/data.json, labels.jsonl (review
+# decisions) and the run summary, then redeploys the dashboard.
+# Run it by hand from the Actions tab with a "since" date for a backfill.
+name: Weekly pipeline
+
+on:
+  schedule:
+    - cron: "17 12 * * 1"  # 12:17 UTC Monday = 6:17am CST / 7:17am CDT
+  workflow_dispatch:
+    inputs:
+      since:
+        description: "First filing date, YYYY-MM-DD (blank = 7 days ago). Use an older date for a backfill."
+        required: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: weekly-pipeline
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180  # a 90-day backfill parses ~20,000 filings at the SEC rate limit
+    env:
+      PYTHONUNBUFFERED: "1"
+      EDGAR_CONTACT_EMAIL: ${{ secrets.EDGAR_CONTACT_EMAIL }}
+      TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: Set run id
+        run: echo "RUN_ID=$(date -u +%F)" >> "$GITHUB_ENV"
+      - name: 1 Pull
+        run: |
+          ARGS="--run-id $RUN_ID"
+          [ -n "${{ inputs.since }}" ] && ARGS="$ARGS --since ${{ inputs.since }}"
+          python -m pipeline.pull $ARGS
+      - name: 2 Parse
+        run: python -m pipeline.parse --run-id $RUN_ID
+      - name: 3 Filter
+        run: python -m pipeline.filter --run-id $RUN_ID
+      - name: 4 Enrich
+        run: python -m pipeline.enrich --run-id $RUN_ID
+      - name: 5-6 Classify + Verify
+        run: python -m pipeline.classify --run-id $RUN_ID
+      - name: 7 Output
+        run: python -m pipeline.output --run-id $RUN_ID
+
+      - name: Commit results
+        run: |
+          git config user.name "ai-funding-scanner[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dashboard/data.json labels.jsonl "runs/$RUN_ID/summary.json"
+          git diff --cached --quiet && { echo "Nothing changed"; exit 0; }
+          git commit -m "Weekly run $RUN_ID"
+          git push
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: run-files
+          path: runs/
+
+  deploy:
+    needs: run
+    uses: ./.github/workflows/pages.yml

@@ -22,7 +22,7 @@ The full design is in [`planning_docs/AI_Funding_Scanner_Pipeline_Spec_v1.md`](p
 | `review.yml` | Your yes/no decisions on companies the models couldn't agree on. The pipeline never edits this |
 | `labels.jsonl`, `labels/` | The golden set (answer key) used to test the classifiers |
 | `requirements.txt` | Python packages the pipeline needs |
-| `.github/workflows/` | GitHub Actions: deploys the dashboard to Pages |
+| `.github/workflows/` | GitHub Actions: `weekly.yml` (Monday run, commits results), `pages.yml` (deploys the dashboard), `pipeline-test.yml` (manual test runs) |
 
 ## Getting started (local)
 
