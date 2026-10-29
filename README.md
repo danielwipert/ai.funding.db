@@ -42,10 +42,30 @@ The full design is in [`planning_docs/AI_Funding_Scanner_Pipeline_Spec_v1.md`](p
    pip install -r requirements.txt
    ```
 
+4. Tell EDGAR who you are (the SEC requires contact details on every request):
+
+   ```bash
+   export EDGAR_CONTACT_EMAIL=you@example.com
+   ```
+
+## Running the pipeline
+
+Pull the last 7 days of Form D filings (writes `runs/<today>/01_filings.jsonl`):
+
+```bash
+python -m pipeline.pull
+```
+
+Or pick the dates yourself:
+
+```bash
+python -m pipeline.pull --since 2026-10-21 --until 2026-10-27
+```
+
 ## Build progress
 
 - [x] Step 0 — Repo skeleton
-- [ ] Step 1 — Pull (`pipeline/pull.py`)
+- [x] Step 1 — Pull (`pipeline/pull.py`)
 - [ ] Step 2 — Parse (`pipeline/parse.py`)
 - [ ] Step 3 — Structural filter (`pipeline/filter.py`)
 - [ ] Step 4 — Golden set (`labels.jsonl`)
