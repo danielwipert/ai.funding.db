@@ -1,11 +1,13 @@
 """Stage 4 (build step 5): Enrich each survivor with its homepage text.
 
-One Tavily web search per company finds the homepage; the page is fetched
+One Tavily web search per company finds the homepage (a second search with
+the founders' names runs when the first finds none); the page is fetched
 and stripped to plain text, capped at ~1,500 words. A homepage is only
 accepted when its domain starts with the company name (or a distinctive word
 of it); it is a "strong" match when the page also names a related person or
-the city (or the domain is a long, distinctive name), otherwise "weak". With no match, homepage_url stays
-None, which later forces an "uncertain" verdict (evidence or nothing).
+the city (or the domain is a long, distinctive name), otherwise "weak". With no match after both searches,
+homepage_url stays None and the row is dropped as "no homepage found"
+(evidence or nothing, decision 23).
 
 Reads runs/<run_id>/03_filtered.jsonl and writes runs/<run_id>/04_enriched.jsonl.
 Needs TAVILY_API_KEY in the environment.
@@ -156,19 +158,33 @@ def match_strength(url: str, text: str, filing: Filing) -> str | None:
     return "weak"
 
 
-def search(filing: Filing) -> list[dict]:
-    """One Tavily search for the company; returns the ranked results."""
+def clean_name(company_name: str) -> str:
+    """Drop "(CIK ...)", tickers and legal suffixes: "Overwatch Data, Inc." -> "Overwatch Data"."""
+    words = re.sub(r"\(.*?\)", " ", company_name).replace(",", " ").split()
+    return " ".join(w for w in words if w.lower().strip(".") not in LEGAL_SUFFIXES)
+
+
+def queries(filing: Filing) -> list[str]:
+    """The first search, and the fallback used when it finds no homepage (decision 23)."""
+    name = clean_name(filing.company_name)
+    officers = [p.name for p in filing.related_persons or [] if "Executive Officer" in p.relationships]
+    people = officers or [p.name for p in filing.related_persons or []]
+    return [
+        f"{name} {filing.city or ''} {filing.state or ''} official website",
+        f'"{name}" {" ".join(people[:2])}',
+    ]
+
+
+def search(query: str) -> list[dict]:
+    """One Tavily search; returns the ranked results outside directory sites."""
     api_key = os.environ.get("TAVILY_API_KEY")
     if not api_key:
         raise SystemExit("Set TAVILY_API_KEY first (free key at https://app.tavily.com).")
-    # Drop "(CIK ...)", tickers and legal suffixes: "Overwatch Data, Inc." -> "Overwatch Data"
-    words = re.sub(r"\(.*?\)", " ", filing.company_name).replace(",", " ").split()
-    name = " ".join(w for w in words if w.lower().strip(".") not in LEGAL_SUFFIXES)
     response = requests.post(
         TAVILY_URL,
         headers={"Authorization": f"Bearer {api_key}"},
         json={
-            "query": f"{name} {filing.city or ''} {filing.state or ''} official website",
+            "query": query,
             "search_depth": "basic",  # 1 credit
             "max_results": 8,
             "include_raw_content": "text",  # fallback when we can't fetch the page ourselves
@@ -177,7 +193,7 @@ def search(filing: Filing) -> list[dict]:
         timeout=60,
     )
     response.raise_for_status()
-    return response.json()["results"]
+    return [r for r in response.json()["results"] if not is_directory(r["url"])]
 
 
 def page_text(url: str) -> str:
@@ -197,17 +213,8 @@ def cap_words(text: str) -> str:
     return " ".join(text.split()[:MAX_EVIDENCE_WORDS])
 
 
-def enrich_one(filing: Filing) -> dict:
-    """Return the stage 4 fields for one filing."""
-    try:
-        results = search(filing)
-    except requests.RequestException as e:
-        return {"enrich_note": f"search failed: {type(e).__name__}"}
-    results = [r for r in results if not is_directory(r["url"])]
-    if not results:
-        return {"enrich_note": "no search results outside directory sites"}
-    candidates = {"candidate_urls": [r["url"] for r in results]}
-
+def pick_homepage(results: list[dict], filing: Filing) -> dict | None:
+    """The first strong match, else the first weak one, else None."""
     weak = None
     for result in results:
         homepage = f"https://{domain_of(result['url'])}"
@@ -225,16 +232,28 @@ def enrich_one(filing: Filing) -> dict:
             "enrich_note": f"{strength} match",
         }
         if strength == "strong":
-            return {**fields, **candidates}
-        weak = weak or fields  # keep the best weak match in case nothing strong turns up
-    if weak:
-        return {**weak, **candidates}
+            return fields
+        weak = weak or fields
+    return weak
 
-    return {
-        "search_snippet": results[0].get("content"),
-        "enrich_note": "no result's domain matched the company name; left for review",
-        **candidates,
-    }
+
+def enrich_one(filing: Filing) -> dict:
+    """Return the stage 4 fields for one filing.
+
+    With no homepage after both searches, the row carries the note
+    "no homepage found"; the classify stage drops it with that reason.
+    """
+    seen_urls: list[str] = []
+    for query in queries(filing):
+        try:
+            results = search(query)
+        except requests.RequestException as e:
+            return {"enrich_note": f"search failed: {type(e).__name__}", "candidate_urls": seen_urls}
+        seen_urls += [r["url"] for r in results]
+        fields = pick_homepage(results, filing)
+        if fields:
+            return {**fields, "candidate_urls": seen_urls}
+    return {"enrich_note": "no homepage found", "candidate_urls": seen_urls}
 
 
 def enrich(run_id: str) -> None:

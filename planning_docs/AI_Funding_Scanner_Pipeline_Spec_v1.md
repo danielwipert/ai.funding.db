@@ -91,7 +91,7 @@ One Pydantic record per filing carries through every stage; each stage adds fiel
 | `previous_accession_no` | 2 Parse | str | The filing a `D/A` amends; its `amount_sold` is the comparison for the amendment rule |
 | `parse_error` | 2 Parse | str | Null unless the XML could not be fetched or read |
 | `passed_structural` | 3 Filter | bool | Plus `drop_reason` when false |
-| `homepage_url`, `search_snippet` | 4 Enrich | str | Null allowed; a null homepage forces `uncertain` |
+| `homepage_url`, `search_snippet` | 4 Enrich | str | Null allowed; a null homepage after two searches drops the row as "no homepage found" (decision 23) |
 | `evidence_text` | 4 Enrich | str | Homepage text, capped at \~1,500 words |
 | `homepage_match`, `enrich_note` | 4 Enrich | str | `strong` (name and identity confirmed) or `weak` (name only, or identity only); note says why a homepage is missing |
 | `classify_a` | 5 Classify | Verdict | `{label: yes/no/uncertain, confidence: 0-1, reason: str, rubric_version: str}` |
@@ -108,7 +108,7 @@ Two fields come from outside the pipeline and are merged at build time from `tra
 
 Five mechanisms keep false positives near zero. They are the same ones in the AI Operations Specification, applied to a one-person pipeline.
 
-1. **Evidence or nothing.** The classifier sees only `evidence_text` from the company's own homepage plus the search snippet. No homepage found means `uncertain`, never a guess from the company name. A name like "Foo AI Inc" is not evidence.
+1. **Evidence or nothing.** The classifier sees only `evidence_text` from the company's own homepage plus the search snippet. No homepage found (after a second search with the founders' names) means the row is dropped as "no homepage found" and listed in the run summary, never a guess from the company name. A name like "Foo AI Inc" is not evidence.
 2. **Generator/verifier separation.** Model A classifies with the rubric. Model B, an open-weight model from a different model family, sees the same evidence and a differently worded prompt that asks it to argue the company is *not* an AI company, then give a verdict. Only two `yes` verdicts ship. Disagreement goes to review. When the homepage match is `weak`, both models also get the Form D facts (name, city, related persons) and must each confirm the homepage is the same company, or the row goes to review (decision 22).
 3. **Confidence floor.** Either model under 0.8 confidence routes to review regardless of label.
 4. **Golden set.** Before the first real run, hand-label 60 filings: 20 clear AI, 20 clear non-AI, 20 hard cases (bolted-on AI, consultancies, robotics). Every rubric or prompt change is re-run against this set and must hold precision ≥ 95% before it ships. The set grows from review decisions.
@@ -195,3 +195,4 @@ Decisions made by logic gate on 2026-10-28. Each line: what was decided, why, an
 | 20 | Agents on a regular tool (rubric v2) | Include when named agents perform a core job and the homepage says what they do | Owner labeled CandorIQ, Allstacks, Lexful yes; plain "AI-powered" lines still excluded | What counts as an AI company |
 | 21 | Search provider | Tavily (free 1,000 searches/month, no card; then $0.008/search) | Covers ~240/month weekly runs plus backfill; returns page text as a fallback | Sources; `pipeline/enrich.py` |
 | 22 | Weak homepage matches | Both classifiers also confirm the homepage is the same company (given name, city, people); otherwise review | Keeps the review queue small (~1 in 3 real homepages match only weakly) while a wrong site still has to fool two models | Precision controls; `pipeline/classify.py` |
+| 23 | No homepage found | Second search (name + executive officers); if still none, drop with reason "no homepage found", listed in the run summary | ~1/3 of survivors are vehicles with no website; sending them to review would break the 20-minute review goal; the second search recovers real companies the first missed | Precision controls; Data model; `pipeline/enrich.py` |
