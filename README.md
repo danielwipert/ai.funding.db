@@ -22,7 +22,7 @@ The full design is in [`planning_docs/AI_Funding_Scanner_Pipeline_Spec_v1.md`](p
 | `review.yml` | Your yes/no decisions on companies the models couldn't agree on. The pipeline never edits this |
 | `labels.jsonl`, `labels/` | The golden set (answer key) used to test the classifiers |
 | `requirements.txt` | Python packages the pipeline needs |
-| `.github/workflows/` | GitHub Actions: `weekly.yml` (Monday run, commits results), `pages.yml` (deploys the dashboard), `pipeline-test.yml` (manual test runs) |
+| `.github/workflows/` | GitHub Actions: `weekly.yml` (Monday run, commits results), `pages.yml` (deploys the dashboard), `pipeline-test.yml` (manual test runs), `contacted.yml` (saves the dashboard's "Mark contacted" button) |
 
 ## Getting started (local)
 
@@ -106,10 +106,10 @@ python -m pipeline.output
 
 ## Your two files
 
-- **`tracking.yml`**: your outreach notes, one entry per company (CIK): `contacted: true` and a `note`.
+- **`tracking.yml`**: your outreach notes, one entry per company (CIK): `contacted: true` and a `note`. The easy way: click **Mark contacted** on the dashboard. The company moves to the bottom at once, and a pre-filled GitHub page opens; type an optional note after `note:` and click **Submit**. About a minute later `tracking.yml` and the dashboard are updated and the request closes itself.
 - **`review.yml`**: your decisions on the dashboard's "Needs review" companies, one line per CIK: `yes` (AI company, moves to the main table) or `no`. Each decision is also added to the golden set.
 
-The pipeline reads both files and never writes to them.
+The weekly pipeline reads both files and never writes to them (only the "Mark contacted" workflow writes `tracking.yml`, and only for requests you open).
 
 ## Weekly audit
 

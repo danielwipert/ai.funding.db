@@ -48,6 +48,10 @@
     .note { color: var(--muted); font-size: 13px; }
     .cik { font-family: ui-monospace, Menlo, monospace; font-size: 12px; cursor: copy; }
     .review-table td { background: var(--warn); }
+    tr.done td { opacity: 0.55; }
+    .btn { font: inherit; font-size: 12px; color: var(--accent); background: var(--bg); cursor: pointer;
+           border: 1px solid var(--accent); border-radius: 6px; padding: 3px 8px; white-space: nowrap; }
+    .btn:hover { background: var(--chip); }
     .verdict { font-size: 12px; margin-bottom: 4px; }
     .empty { padding: 24px; color: var(--muted); text-align: center; }
     footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
@@ -94,7 +98,7 @@
         <th>What it does</th>
         <th>People</th>
         <th>EDGAR</th>
-        <th class="sortable" data-key="contacted">Contacted</th>
+        <th>Contacted</th>
       </tr></thead>
       <tbody></tbody>
     </table>
@@ -126,6 +130,46 @@ const people = list => (list || []).map(p =>
 let companies = [];
 let sortKey = "filing_date", sortDir = -1;
 
+// "Mark contacted" (decision 30): the row moves to the bottom at once and is
+// remembered in this browser until the saved tracking.yml shows up in data.json.
+// Saving itself happens on GitHub: the click opens a pre-filled issue, and the
+// "Mark contacted" workflow writes tracking.yml when you submit it.
+const repo = location.hostname.endsWith("github.io")
+  ? `${location.hostname.split(".")[0]}/${location.pathname.split("/")[1]}`
+  : "danielwipert/ai.funding.db";
+const PENDING_KEY = "pendingContacted";
+function loadPending() {
+  try { return JSON.parse(localStorage.getItem(PENDING_KEY)) || {}; } catch { return {}; }
+}
+function savePending(pending) {
+  try { localStorage.setItem(PENDING_KEY, JSON.stringify(pending)); } catch {}
+}
+let pending = loadPending();
+const isContacted = c => Boolean(c.contacted || pending[c.cik]);
+
+function markContacted(cik) {
+  const c = companies.find(x => x.cik === cik);
+  pending[cik] = Date.now();
+  savePending(pending);
+  render();
+  const title = `[contacted] ${cik} ${c ? c.company_name : ""}`;
+  const body = "note: \n\n" +
+    "Type a note after \"note:\" if you like (optional), then click Submit.\n" +
+    "The dashboard saves this to tracking.yml and updates in about a minute.";
+  window.open(`https://github.com/${repo}/issues/new?title=${encodeURIComponent(title)}` +
+              `&body=${encodeURIComponent(body)}`, "_blank", "noopener");
+}
+
+function contactedCell(c) {
+  if (c.contacted) {
+    return `<span class="chip">✓ contacted</span>${c.note ? `<div class="note">${esc(c.note)}</div>` : ""}`;
+  }
+  if (pending[c.cik]) {
+    return `<span class="chip">✓ saving…</span><div class="note">submit the GitHub page to save</div>`;
+  }
+  return `<button class="btn" data-cik="${esc(c.cik)}">Mark contacted</button>`;
+}
+
 function render() {
   const state = document.getElementById("f-state").value;
   const minAmount = Number(document.getElementById("f-amount").value);
@@ -135,17 +179,19 @@ function render() {
   const rows = companies.filter(c =>
     (!state || c.state === state) &&
     (c.amount_sold_usd || 0) >= minAmount &&
-    (!contacted || (contacted === "yes") === Boolean(c.contacted)) &&
+    (!contacted || (contacted === "yes") === isContacted(c)) &&
     (!query || (c.company_name + " " + (c.related_persons || []).map(p => p.name).join(" "))
                  .toLowerCase().includes(query))
   ).sort((a, b) => {
+    const done = isContacted(a) - isContacted(b);  // contacted companies always at the bottom
+    if (done) return done;
     const x = a[sortKey] ?? "", y = b[sortKey] ?? "";
     return (x < y ? -1 : x > y ? 1 : 0) * sortDir;
   });
 
   document.getElementById("count").textContent = `${rows.length} of ${companies.length} companies`;
   document.querySelector("#companies tbody").innerHTML = rows.length ? rows.map(c => `
-    <tr>
+    <tr class="${isContacted(c) ? "done" : ""}">
       <td class="company">${link(c.homepage_url, c.company_name)}</td>
       <td class="nowrap">${esc(c.filing_date)}${c.last_updated && c.last_updated !== c.first_seen
         ? `<br><span class="note">amount updated ${esc(c.last_updated)}</span>` : ""}</td>
@@ -154,9 +200,10 @@ function render() {
       <td class="desc">${esc(c.description)}</td>
       <td class="people">${people(c.related_persons)}</td>
       <td>${link(c.edgar_url, "Form D")}</td>
-      <td>${c.contacted ? '<span class="chip">✓ contacted</span>' : ""}
-          ${c.note ? `<div class="note">${esc(c.note)}</div>` : ""}</td>
+      <td>${contactedCell(c)}</td>
     </tr>`).join("") : `<tr><td colspan="8" class="empty">No companies match.</td></tr>`;
+  document.querySelectorAll("#companies .btn").forEach(b =>
+    b.addEventListener("click", () => markContacted(b.dataset.cik)));
 }
 
 function renderReview(review) {
@@ -193,6 +240,10 @@ fetch("data.json", {cache: "no-store"})
   .then(r => r.json())
   .then(data => {
     companies = data.companies || [];
+    // forget local marks once saved, or after a day if the GitHub page was never submitted
+    companies.filter(c => c.contacted).forEach(c => delete pending[c.cik]);
+    Object.keys(pending).forEach(cik => { if (Date.now() - pending[cik] > 86400000) delete pending[cik]; });
+    savePending(pending);
     const states = [...new Set(companies.map(c => c.state).filter(Boolean))].sort();
     document.getElementById("f-state").insertAdjacentHTML("beforeend",
       states.map(s => `<option>${esc(s)}</option>`).join(""));

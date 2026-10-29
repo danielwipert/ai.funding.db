@@ -84,8 +84,20 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add dashboard/data.json labels.jsonl "runs/$RUN_ID/summary.json"
           git diff --cached --quiet && { echo "Nothing changed"; exit 0; }
-          git commit -m "Weekly run $RUN_ID"
-          git push
+          git commit -q -m "Weekly run $RUN_ID"
+          git push origin HEAD:main && exit 0
+          # main moved during the run (e.g. a "Mark contacted" save): redo the
+          # output step on top of the latest main and try again.
+          for attempt in 1 2 3 4; do
+            sleep $((attempt * 5))
+            git fetch -q origin main && git reset -q --hard origin/main
+            python -m pipeline.output --run-id $RUN_ID
+            git add dashboard/data.json labels.jsonl "runs/$RUN_ID/summary.json"
+            git diff --cached --quiet && exit 0
+            git commit -q -m "Weekly run $RUN_ID"
+            git push origin HEAD:main && exit 0
+          done
+          exit 1
 
       - uses: actions/upload-artifact@v4
         if: always()
