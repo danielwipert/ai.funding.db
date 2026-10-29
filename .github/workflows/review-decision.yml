@@ -1,0 +1,61 @@
+# Saves the dashboard's "✓ AI" / "✗ Not AI" buttons on the "Needs review"
+# table: when the repo owner opens an issue titled "[review] <cik> yes|no ...",
+# record it in review.yml, apply it to data.json and labels.jsonl, close the
+# issue, and redeploy the dashboard (decision 31).
+name: Review decision
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+
+jobs:
+  record:
+    # Only the repo owner's requests count: the repo is public, so anyone can open issues.
+    if: startsWith(github.event.issue.title, '[review]') && github.event.issue.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: Update review.yml, data.json and labels.jsonl, commit
+        env:  # issue text goes in through variables, never into the command itself
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "ai-funding-scanner[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Start from the latest main each try, so quick clicks or a weekly
+          # run pushing at the same moment never overwrite each other.
+          for attempt in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python -m pipeline.review
+            git add review.yml dashboard/data.json labels.jsonl
+            git diff --cached --quiet && { echo "Nothing changed"; exit 0; }
+            git commit -q -m "Review decision (issue #$ISSUE_NUMBER)"
+            git push origin HEAD:main && exit 0
+            sleep $((attempt * 5))
+          done
+          exit 1
+
+      - name: Close the request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --comment "Saved to review.yml and the golden set. The dashboard updates in about a minute."
+
+  deploy:
+    needs: record
+    uses: ./.github/workflows/pages.yml

@@ -52,6 +52,8 @@
     .btn { font: inherit; font-size: 12px; color: var(--accent); background: var(--bg); cursor: pointer;
            border: 1px solid var(--accent); border-radius: 6px; padding: 3px 8px; white-space: nowrap; }
     .btn:hover { background: var(--chip); }
+    .btn.no { color: #c0392b; border-color: #c0392b; }
+    .choices { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
     .verdict { font-size: 12px; margin-bottom: 4px; }
     .empty { padding: 24px; color: var(--muted); text-align: center; }
     footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
@@ -105,13 +107,14 @@
   </div>
 
   <h2>Needs review</h2>
-  <p class="sub">The two models didn't agree, or weren't sure. Decide each one in <code>review.yml</code>
-    (click a CIK to copy it): <code>"&lt;cik&gt;": yes</code> moves it to the table above, <code>no</code> removes it.</p>
+  <p class="sub">The two models didn't agree, or weren't sure. Click <b>✓ AI</b> (a good pick: moves it to the
+    table above) or <b>✗ Not AI</b> (a bad pick: removes it), then submit the GitHub page that opens.
+    Each decision is saved to <code>review.yml</code> and added to the golden set.</p>
   <div class="wrap">
     <table id="review" class="review-table">
       <thead><tr>
         <th>CIK</th><th>Company</th><th>Filing date</th><th>Amount sold</th>
-        <th>Why review</th><th>Model answers</th><th>EDGAR</th>
+        <th>Why review</th><th>Model answers</th><th>EDGAR</th><th>Your call</th>
       </tr></thead>
       <tbody></tbody>
     </table>
@@ -170,6 +173,42 @@ function contactedCell(c) {
   return `<button class="btn" data-cik="${esc(c.cik)}">Mark contacted</button>`;
 }
 
+// Review buttons (decision 31) work the same way: the click opens a pre-filled
+// "[review] <cik> yes|no" issue, and the "Review decision" workflow saves it.
+// The row shows "saving…" until it leaves the review list in data.json.
+const REVIEW_KEY = "pendingReview";
+let pendingReview = {};
+try { pendingReview = JSON.parse(localStorage.getItem(REVIEW_KEY)) || {}; } catch {}
+const savePendingReview = () => { try { localStorage.setItem(REVIEW_KEY, JSON.stringify(pendingReview)); } catch {} };
+let reviewRows = [];
+
+function decide(cik, decision) {
+  const c = reviewRows.find(x => x.cik === cik);
+  pendingReview[cik] = {decision, at: Date.now()};
+  savePendingReview();
+  renderReview();
+  const title = `[review] ${cik} ${decision} ${c ? c.company_name : ""}`;
+  const body = "note: \n\n" +
+    `You chose: ${decision === "yes" ? "✓ AI company (good pick)" : "✗ not an AI company (bad pick)"}.\n` +
+    "Type why after \"note:\" if you like (optional, it goes into the golden set), then click Submit.\n" +
+    "The dashboard saves this to review.yml and updates in about a minute.";
+  window.open(`https://github.com/${repo}/issues/new?title=${encodeURIComponent(title)}` +
+              `&body=${encodeURIComponent(body)}`, "_blank", "noopener");
+}
+
+function decisionCell(c) {
+  const p = pendingReview[c.cik];
+  if (p) {
+    return `<span class="chip">${p.decision === "yes" ? "✓ AI" : "✗ Not AI"} · saving…</span>
+      <div class="note">submit the GitHub page to save</div>
+      <button class="btn undo" data-cik="${esc(c.cik)}">Change</button>`;
+  }
+  return `<div class="choices">
+    <button class="btn" data-cik="${esc(c.cik)}" data-decision="yes" title="A good pick: it is an AI company">✓ AI</button>
+    <button class="btn no" data-cik="${esc(c.cik)}" data-decision="no" title="A bad pick: not an AI company">✗ Not AI</button>
+  </div>`;
+}
+
 function render() {
   const state = document.getElementById("f-state").value;
   const minAmount = Number(document.getElementById("f-amount").value);
@@ -206,9 +245,9 @@ function render() {
     b.addEventListener("click", () => markContacted(b.dataset.cik)));
 }
 
-function renderReview(review) {
-  document.querySelector("#review tbody").innerHTML = review.length ? review.map(c => `
-    <tr>
+function renderReview() {
+  document.querySelector("#review tbody").innerHTML = reviewRows.length ? reviewRows.map(c => `
+    <tr class="${pendingReview[c.cik] ? "done" : ""}">
       <td class="cik" title="Click to copy">${esc(c.cik)}</td>
       <td class="company">${link(c.homepage_url, c.company_name)}
         ${c.homepage_match === "weak" ? '<div class="note">website match is weak: check it is the same company</div>' : ""}</td>
@@ -219,9 +258,18 @@ function renderReview(review) {
         `<div class="verdict"><b>${esc(v.model.split("/")[1] || v.model)}: ${esc(v.label)}</b>
          (${Math.round((v.confidence || 0) * 100)}%) ${esc(v.reason)}</div>`).join("")}</td>
       <td>${link(c.edgar_url, "Form D")}</td>
-    </tr>`).join("") : `<tr><td colspan="7" class="empty">Nothing to review.</td></tr>`;
+      <td>${decisionCell(c)}</td>
+    </tr>`).join("") : `<tr><td colspan="8" class="empty">Nothing to review.</td></tr>`;
   document.querySelectorAll("#review .cik").forEach(td => td.addEventListener("click", () => {
     navigator.clipboard?.writeText(`"${td.textContent}": `);
+  }));
+  document.querySelectorAll("#review .btn[data-decision]").forEach(b =>
+    b.addEventListener("click", () => decide(b.dataset.cik, b.dataset.decision)));
+  // "Change" only clears the mark in this browser; a submitted issue still counts
+  document.querySelectorAll("#review .btn.undo").forEach(b => b.addEventListener("click", () => {
+    delete pendingReview[b.dataset.cik];
+    savePendingReview();
+    renderReview();
   }));
 }
 
@@ -251,7 +299,13 @@ fetch("data.json", {cache: "no-store"})
       ? `Updated ${new Date(data.updated_at).toLocaleString()} · newly funded AI companies from SEC Form D filings`
       : "No pipeline run yet.";
     render();
-    renderReview(data.review || []);
+    reviewRows = data.review || [];
+    // forget review marks once the row has left the review list, or after a day
+    Object.keys(pendingReview).forEach(cik => {
+      if (!reviewRows.some(c => c.cik === cik) || Date.now() - pendingReview[cik].at > 86400000) delete pendingReview[cik];
+    });
+    savePendingReview();
+    renderReview();
   })
   .catch(() => { document.getElementById("updated").textContent = "Could not load data.json."; });
 </script>
