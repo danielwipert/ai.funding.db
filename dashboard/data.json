@@ -112,6 +112,64 @@
    "note": ""
   },
   {
+   "cik": "0002054765",
+   "company_name": "Overwatch Data, Inc.",
+   "homepage_url": "https://overwatchdata.ai",
+   "filing_date": "2026-10-26",
+   "amount_sold_usd": 14959986,
+   "state": "NY",
+   "description": "Overwatch Data sells AI-native threat intelligence and fraud/cyber risk operations. Named AI agents perform the core job: monitoring 300k+ deep/dark web sources, investigating threats, verifying exploits, and assembling evidence packages. Homepage explains in detail what the agents do (with example workflows), positioning the model/agents as the core product rather than a bolt-on feature. Not a services firm or consultancy \u2014 analysts validate, but the platform is the product. No crypto, hardware, or defense-led positioning. Matches the 'named AI agents performing a core job, with the homepage saying what work they do' include criterion.",
+   "related_persons": [
+    {
+     "name": "ARJUN BISEN",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "ZARA PERUMAL",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "ZIV CONEN",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "CHRIS GOTTSCHALK",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2054765/000205476526000003/",
+   "accession_no": "0002054765-26-000003",
+   "first_seen": "2026-10-29",
+   "last_updated": "2026-10-29",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "uncertain",
+     "confidence": 0.9,
+     "reason": "Would include: Overwatch Data's homepage and SEC Form D (Overwatch Data, Inc., Brooklyn NY, directors Bisen/Perumal/Conen/Gottschalk) align, and the product is AI-native threat intelligence where named AI agents (monitoring, investigation, evidence assembly) perform the core work the homepage describes in concrete detail. Include under the agent-copilot clause."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "Sells AI agents performing core detection and investigation; AI-native product."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
    "cik": "0002160850",
    "company_name": "CandorIQ, Inc.",
    "homepage_url": "https://candoriq.com",
@@ -839,62 +897,6 @@
   }
  ],
  "review": [
-  {
-   "cik": "0002054765",
-   "company_name": "Overwatch Data, Inc.",
-   "homepage_url": "https://overwatchdata.ai",
-   "filing_date": "2026-10-26",
-   "amount_sold_usd": 14959986,
-   "state": "NY",
-   "description": "Overwatch Data sells AI-native threat intelligence and fraud/cyber risk operations. Named AI agents perform the core job: monitoring 300k+ deep/dark web sources, investigating threats, verifying exploits, and assembling evidence packages. Homepage explains in detail what the agents do (with example workflows), positioning the model/agents as the core product rather than a bolt-on feature. Not a services firm or consultancy \u2014 analysts validate, but the platform is the product. No crypto, hardware, or defense-led positioning. Matches the 'named AI agents performing a core job, with the homepage saying what work they do' include criterion.",
-   "related_persons": [
-    {
-     "name": "ARJUN BISEN",
-     "relationships": [
-      "Executive Officer",
-      "Director"
-     ]
-    },
-    {
-     "name": "ZARA PERUMAL",
-     "relationships": [
-      "Director"
-     ]
-    },
-    {
-     "name": "ZIV CONEN",
-     "relationships": [
-      "Director"
-     ]
-    },
-    {
-     "name": "CHRIS GOTTSCHALK",
-     "relationships": [
-      "Director"
-     ]
-    }
-   ],
-   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2054765/000205476526000003/",
-   "accession_no": "0002054765-26-000003",
-   "first_seen": "2026-10-29",
-   "last_updated": "2026-10-29",
-   "review_reason": "a model was uncertain",
-   "homepage_match": "strong",
-   "verdicts": [
-    {
-     "model": "z-ai/glm-5.3",
-     "label": "uncertain",
-     "confidence": 0.9,
-     "reason": "Would include: Overwatch Data's homepage and SEC Form D (Overwatch Data, Inc., Brooklyn NY, directors Bisen/Perumal/Conen/Gottschalk) align, and the product is AI-native threat intelligence where named AI agents (monitoring, investigation, evidence assembly) perform the core work the homepage describes in concrete detail. Include under the agent-copilot clause."
-    },
-    {
-     "model": "deepseek/deepseek-v4-flash",
-     "label": "yes",
-     "confidence": 0.9,
-     "reason": "Sells AI agents performing core detection and investigation; AI-native product."
-    }
-   ]
-  },
   {
    "cik": "0002161171",
    "company_name": "SpartanX Technologies, Inc.",
@@ -1641,5 +1643,5 @@
    ]
   }
  ],
- "updated_at": "2026-10-29T17:33:09+00:00"
+ "updated_at": "2026-10-30T00:20:42+00:00"
 }

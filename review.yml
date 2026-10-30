@@ -8,3 +8,4 @@
 #
 # The next run applies each decision once and adds it to labels.jsonl
 # (the golden set). The pipeline never edits this file.
+"0002054765": yes
