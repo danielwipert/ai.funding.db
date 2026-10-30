@@ -1,5 +1,7 @@
-# Weekly review decisions, edited by hand. One line per company, keyed on CIK
-# (shown on the dashboard's "Needs review" table):
+# Weekly review decisions. One line per company, keyed on CIK (shown on the
+# dashboard's "Needs review" table). Edit by hand, or use the dashboard's
+# "✓ AI" / "✗ Not AI" buttons (they open a GitHub issue; the
+# review-decision.yml workflow then adds the line and applies it right away):
 #
 #   "0002054765": yes    # it is an AI company: move it to the main table
 #   "0002160850": no     # not an AI company: remove it from review

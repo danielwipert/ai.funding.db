@@ -79,7 +79,7 @@ def load_data() -> dict:
     return {"companies": [], "review": []}
 
 
-def add_label(row: dict, decision: str, existing: set[str]) -> bool:
+def add_label(row: dict, decision: str, existing: set[str], note: str | None = None) -> bool:
     """Append a review decision to the golden set (once per filing)."""
     if row["accession_no"] in existing:
         return False
@@ -88,15 +88,17 @@ def add_label(row: dict, decision: str, existing: set[str]) -> bool:
             "accession_no": row["accession_no"], "cik": row["cik"], "company_name": row["company_name"],
             "label": decision, "category": "hard",
             "reason": f"Weekly review decision; pipeline said review: {row['review_reason']}",
-            "your_note": None, "homepage_url": row["homepage_url"],
+            "your_note": note or None, "homepage_url": row["homepage_url"],
             "rubric_version": RUBRIC_VERSION, "labeled_at": datetime.now(timezone.utc).isoformat(),
         }) + "\n")
     existing.add(row["accession_no"])
     return True
 
 
-def merge(filings: list[Filing], data: dict, decisions: dict, today: str) -> Counter:
-    """Fold this run's ship/review rows and the review decisions into data."""
+def merge(filings: list[Filing], data: dict, decisions: dict, today: str,
+          notes: dict | None = None) -> Counter:
+    """Fold this run's ship/review rows and the review decisions into data.
+    notes ({cik: text}) go into the golden-set label as your_note."""
     companies = {c["cik"]: c for c in data["companies"]}
     review = {c["cik"]: c for c in data["review"]}
     changes = Counter()
@@ -137,7 +139,7 @@ def merge(filings: list[Filing], data: dict, decisions: dict, today: str) -> Cou
             continue
         row = review.pop(cik)
         changes[f"review decided {decision}"] += 1
-        changes["labels added"] += add_label(row, decision, existing_labels)
+        changes["labels added"] += add_label(row, decision, existing_labels, (notes or {}).get(cik))
         if decision == "yes":
             upsert(row)
 

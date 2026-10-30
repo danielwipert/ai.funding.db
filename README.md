@@ -22,7 +22,7 @@ The full design is in [`planning_docs/AI_Funding_Scanner_Pipeline_Spec_v1.md`](p
 | `review.yml` | Your yes/no decisions on companies the models couldn't agree on. The pipeline never edits this |
 | `labels.jsonl`, `labels/` | The golden set (answer key) used to test the classifiers |
 | `requirements.txt` | Python packages the pipeline needs |
-| `.github/workflows/` | GitHub Actions: `weekly.yml` (Monday run, commits results), `pages.yml` (deploys the dashboard), `pipeline-test.yml` (manual test runs), `contacted.yml` (saves the dashboard's "Mark contacted" button) |
+| `.github/workflows/` | GitHub Actions: `weekly.yml` (Monday run, commits results), `pages.yml` (deploys the dashboard), `pipeline-test.yml` (manual test runs), `contacted.yml` (saves the dashboard's "Mark contacted" button), `review-decision.yml` (saves the "✓ AI" / "✗ Not AI" buttons on the "Needs review" table) |
 
 ## Getting started (local)
 
@@ -107,9 +107,9 @@ python -m pipeline.output
 ## Your two files
 
 - **`tracking.yml`**: your outreach notes, one entry per company (CIK): `contacted: true` and a `note`. The easy way: click **Mark contacted** on the dashboard. The company moves to the bottom at once, and a pre-filled GitHub page opens; type an optional note after `note:` and click **Submit**. About a minute later `tracking.yml` and the dashboard are updated and the request closes itself.
-- **`review.yml`**: your decisions on the dashboard's "Needs review" companies, one line per CIK: `yes` (AI company, moves to the main table) or `no`. Each decision is also added to the golden set.
+- **`review.yml`**: your decisions on the dashboard's "Needs review" companies, one line per CIK: `yes` (AI company, moves to the main table) or `no`. Each decision is also added to the golden set. The easy way: click **✓ AI** (a good pick) or **✗ Not AI** (a bad pick) on the review row. A pre-filled GitHub page opens; type an optional reason after `note:` and click **Submit**. About a minute later the decision is in `review.yml`, the dashboard and `labels.jsonl`, and the request closes itself.
 
-The weekly pipeline reads both files and never writes to them (only the "Mark contacted" workflow writes `tracking.yml`, and only for requests you open).
+The weekly pipeline reads both files and never writes to them (only the "Mark contacted" and "Review decision" workflows write `tracking.yml` and `review.yml`, and only for requests you open).
 
 ## Weekly audit
 
