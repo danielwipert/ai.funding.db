@@ -1,52 +1,38 @@
 {
  "run_id": "2026-11-09",
- "filings_pulled": 1813,
+ "filings_pulled": 1308,
  "parse_errors": 0,
- "passed_filter": 108,
+ "passed_filter": 87,
  "filter_drops": {
-  "industry group": 1530,
-  "amount sold": 169,
+  "industry group": 1088,
+  "amount sold": 127,
   "amendment": 6
  },
- "with_homepage": 59,
+ "with_homepage": 51,
  "final": {
-  "drop": 97,
-  "ship": 5,
-  "review": 6
+  "review": 5,
+  "drop": 78,
+  "ship": 4
  },
  "shipped": [
-  "TrashLab Software Inc.",
-  "HData, Inc.",
-  "PHASE CHANGE SOFTWARE LLC",
-  "Minerva BI, Inc.",
-  "Uncovr, Inc."
+  "ShelfCycle Inc.",
+  "Locaition Matters Inc.",
+  "Uncovr, Inc.",
+  "Flax Technologies, Inc."
  ],
  "review": [
   "Idaptiq Trials Inc.",
-  "ShelfCycle Inc.",
-  "Tremont AI, Inc.",
-  "Trinity AI Boston, Inc.",
-  "Locaition Matters Inc.",
-  "Infinite Cooling Inc."
+  "HData, Inc.",
+  "PHASE CHANGE SOFTWARE LLC",
+  "Minerva BI, Inc.",
+  "Trinity AI Boston, Inc."
  ],
  "no_homepage_found": [
-  "Drowsy Digital, Inc.",
-  "Drowsy Digital, Inc.",
-  "MSFinTechCo, Inc.",
-  "CUTRAVEL HOLDINGS LLC",
-  "Faex Technologies Inc.",
-  "Stardust Semiconductors Inc.",
-  "Old G Holdings, LLC",
-  "Crosscut SPV Frontier LP - Series 2",
-  "Zenith GPO Inc",
-  "loopworks, LLC",
-  "Redwagon Systems Inc.",
   "AIM Processing, Inc.",
   "Asenath Capital Management II, LLC",
   "Definition II-A LLC",
   "Definition II-F LLC",
   "Definition II-F LLC",
-  "MIAMI VICE VENUS LLC",
   "MIAMI VICE 29 TERRACE LLC",
   "LOGOSFI, Inc.",
   "Secturion Topco Partnership, LP",
@@ -75,17 +61,15 @@
   "Nadhi AI, Inc.",
   "Agency Tool Co",
   "Agency Tool Co",
-  "Flax Technologies, Inc.",
   "1DER, Inc.",
   "Lumon Solutions Marshfield, LLC",
   "RABKDO LTH LLC"
  ],
  "dashboard_changes": {
-  "companies added": 5,
-  "sent to review": 6
+  "companies added": 3
  },
- "tavily_searches": 165,
- "tavily_cost_usd_if_paid": 1.32,
- "model_cost_usd": 0.0928,
- "runtime_minutes": 26.7
+ "tavily_searches": 131,
+ "tavily_cost_usd_if_paid": 1.048,
+ "model_cost_usd": 0.0868,
+ "runtime_minutes": 22.1
 }

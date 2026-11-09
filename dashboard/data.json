@@ -50,6 +50,105 @@
    "note": ""
   },
   {
+   "cik": "0002162905",
+   "company_name": "Flax Technologies, Inc.",
+   "homepage_url": "https://flax.ai",
+   "filing_date": "2026-11-06",
+   "amount_sold_usd": 7894996,
+   "state": "WA",
+   "description": "Flax Health (Flax Technologies) sells AI that automates skilled nursing / post-acute care paperwork \u2014 referral screening, intake form auto-fill from clinical notes, MDS completion, and claim substantiation. The core product is document intelligence and clinical data extraction performed by AI models (co-founder has a PhD in AI/LLMs for clinical data extraction). The model is the product, not a bolted-on feature.",
+   "related_persons": [
+    {
+     "name": "Trenton Udvar-Hazy",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "David Kartchner",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Tanner Potter",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Eric Hilton",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2162905/000216290526000001/",
+   "accession_no": "0002162905-26-000001",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": null,
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "The homepage's core value proposition is AI performing the work: summarizing patient details from portals, auto-filling MDS from clinical notes, drafting appeals, and substantiating claims with clinical evidence. This is document intelligence/decisioning where the model does the core job, satisfying the include criteria. No exclusion criteria apply (healthcare SaaS, not biotech/drug discovery; no crypto; no defense focus)."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The homepage leads with 'AI that Automates Skilled Nursing Paperwork' and describes specific model-driven functions (summarizing patient details, flagging fit, auto-filling MDS, substantiating claims). The co-founder's PhD in AI for healthcare and the product's reliance on clinical data extraction and LLMs indicate the model is core, not bolted-on. No exclusion applies. The case against is weak because the product's value proposition hinges on AI performing tasks that cannot be done at scale without it."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0002163840",
+   "company_name": "Locaition Matters Inc.",
+   "homepage_url": "https://locaitionmatters.com",
+   "filing_date": "2026-11-05",
+   "amount_sold_usd": 1050000,
+   "state": "TX",
+   "description": "Locaition Matters builds Curated Intelligence\u2122, an AI workspace for location decisions that lets anyone ask location questions in plain English and receive cited, map-based GIS analysis reports.",
+   "related_persons": [
+    {
+     "name": "Matthew S Felton",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2163840/000216384026000001/",
+   "accession_no": "0002163840-26-000001",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "Locaition Matters' product, Curated Intelligence\u2122, is an AI workspace where a model performs the core function: translating plain-English location questions into spatial data analysis and cited reports. The homepage explicitly states 'We taught AI how to do GIS' and describes what the AI does (data collection, integration, analysis, reporting). The model is the product, not a bolted-on feature \u2014 the product would not exist without LLMs. No exclusions apply (not a consultancy, not defense-led, no crypto). The Form D company name, Austin location, and CEO Matt Felton match the website."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The homepage clearly states that Curated Intelligence is an AI workspace for location decisions, allowing users to ask questions in plain English and get cited answers. The product\u2019s core function \u2014 translating natural language into spatial analysis and reporting \u2014 would not exist without AI/ML. The company explicitly says \u201cWe taught AI how to do GIS\u201d and positions AI as the game changer that makes GIS accessible. This fits the rubric\u2019s inclusion criteria: a product whose core function is performed by a model (decisioning, generation) and that describes itself with AI as the lead noun. The case against is weak because the AI is not a bolted-on feature; it is the mechanism that enables the product\u2019s primary value. No exclusion criteria apply (not a services firm, hardware, crypto, defense, etc.)."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
    "cik": "0001390066",
    "company_name": "PHASE CHANGE SOFTWARE LLC",
    "homepage_url": "https://phasechange.ai",
@@ -199,6 +298,47 @@
      "label": "yes",
      "confidence": 0.9,
      "reason": "The homepage leads with 'AI for marketing leaders' and describes named AI agents (Analysis & Optimization, Campaign Generation & Activation, Measurement & Reporting) that perform core marketing tasks. The product's value proposition is built on AI understanding consumers and automating work, meeting the include criteria. The skeptical case is weak because the website clearly positions AI as the core, not a feature, and there is no evidence of exclusion categories (services, hardware, crypto, public sector). The company name 'BI' is not dispositive given the explicit AI focus."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0002089370",
+   "company_name": "ShelfCycle Inc.",
+   "homepage_url": "https://shelfcycle.com",
+   "filing_date": "2026-11-03",
+   "amount_sold_usd": 4399997,
+   "state": "NY",
+   "description": "ShelfCycle is an AI-native ERP/CRM for chemical distribution. The homepage describes a roster of named AI agents doing core jobs: Order Entry (reads POs and drafts orders), Voice Assistant, SC Intelligence (answers questions from records), Hazmat Compliance Copilot, Statement Match, and Data Analyst. It also markets an 'agent-ready API' letting customers point their own AI agents at the system. While the ERP would function without the agents, the rubric explicitly includes tools where named AI agents perform core work with the homepage explaining what they do \u2014 which is exactly the case here.",
+   "related_persons": [
+    {
+     "name": "Michael Harrison",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2089370/000147083126000974/",
+   "accession_no": "0001470831-26-000974",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.85,
+     "reason": "Named AI agents (Order Entry, Voice Assistant, SC Intelligence, Hazmat Compliance Copilot, Statement Match, Data Analyst) perform core jobs and the homepage details what each does; the company self-describes as 'AI-native'. Meets the include criterion for named agents doing core work."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "The website explicitly lists named AI agents (Order Entry, Voice Assistant, SC Intelligence, Hazmat Compliance Copilot, Statement Match, Data Analyst) that perform core jobs, and the homepage describes what each agent does. The rubric includes exactly this scenario: 'sells a tool where named AI agents perform a core job and the homepage says what work they do, even if the underlying tool would work without them.' The product is marketed as AI-native and the agents are integral to the value proposition. The skeptical case is weak because the rubric's inclusion criteria are met directly."
     }
    ],
    "contacted": false,
@@ -1432,43 +1572,6 @@
    ]
   },
   {
-   "cik": "0002163840",
-   "company_name": "Locaition Matters Inc.",
-   "homepage_url": "https://locaitionmatters.com",
-   "filing_date": "2026-11-05",
-   "amount_sold_usd": 1050000,
-   "state": "TX",
-   "description": "Locaition Matters builds Curated Intelligence\u2122, an AI workspace that lets anyone ask location questions in plain English and get cited, map-based location analysis reports (demographics, traffic, competition, zoning, risk) \u2014 effectively an AI agent for GIS.",
-   "related_persons": [
-    {
-     "name": "Matthew S Felton",
-     "relationships": [
-      "Executive Officer"
-     ]
-    }
-   ],
-   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2163840/000216384026000001/",
-   "accession_no": "0002163840-26-000001",
-   "first_seen": "2026-11-09",
-   "last_updated": "2026-11-09",
-   "review_reason": "a model was under the confidence floor",
-   "homepage_match": "strong",
-   "verdicts": [
-    {
-     "model": "z-ai/glm-5.3",
-     "label": "yes",
-     "confidence": 0.95,
-     "reason": "Locaition Matters' product, Curated Intelligence\u2122, is an AI workspace for location decisions: users ask location questions in plain English and the AI performs the core work \u2014 translating questions into spatial data, layer analysis, risk review, and cited report generation. The homepage explicitly says 'We taught AI how to do GIS' and describes what the model does. The core product would not exist without LLMs; this is document/decisioning intelligence, not AI bolted onto an existing tool."
-    },
-    {
-     "model": "deepseek/deepseek-v4-flash",
-     "label": "no",
-     "confidence": 0.2,
-     "reason": "The homepage repeatedly centers 'location intelligence' and 'GIS', with AI positioned as an enabler rather than the product itself. The core offering is spatial data analysis and reporting, which has existed for decades; the AI adds a plain-English interface but does not define the product's existence. Under the rubric, the product would likely work without the AI layer (e.g., via manual GIS queries), so it fails the 'would not exist without ML/LLM' test. The company's history and partner status further suggest a services orientation."
-    }
-   ]
-  },
-  {
    "cik": "0002115573",
    "company_name": "Tremont AI, Inc.",
    "homepage_url": "https://tremont.ai",
@@ -1502,45 +1605,6 @@
      "label": "no",
      "confidence": 1.0,
      "reason": "The exclusion is explicit and unambiguous; the company's entire offering is for preclinical drug safety, which is drug discovery."
-    }
-   ]
-  },
-  {
-   "cik": "0002089370",
-   "company_name": "ShelfCycle Inc.",
-   "homepage_url": "https://shelfcycle.com",
-   "filing_date": "2026-11-03",
-   "amount_sold_usd": 4399997,
-   "state": "NY",
-   "description": "AI-native ERP/CRM for chemical distribution with named agents for order entry, voice ordering, hazmat compliance, statement matching, and data analysis.",
-   "related_persons": [
-    {
-     "name": "Michael Harrison",
-     "relationships": [
-      "Executive Officer",
-      "Director",
-      "Promoter"
-     ]
-    }
-   ],
-   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2089370/000147083126000974/",
-   "accession_no": "0001470831-26-000974",
-   "first_seen": "2026-11-09",
-   "last_updated": "2026-11-09",
-   "review_reason": "models disagree",
-   "homepage_match": "strong",
-   "verdicts": [
-    {
-     "model": "z-ai/glm-5.3",
-     "label": "yes",
-     "confidence": 0.85,
-     "reason": "ShelfCycle is an ERP/CRM for chemical distribution, but the homepage goes well beyond an 'AI-powered' feature bullet. It ships with named AI agents doing core operational work \u2014 Order Entry ('Reads the PO. Drafts the order.'), Voice Assistant, Hazmat Compliance Copilot, Statement Match, Data Analyst, SC Intelligence \u2014 each with a stated job, plus an 'agent-ready API' and document/voice order entry where the model drafts orders for human approval. This matches the include rule for tools where named AI agents perform a core job with the homepage explaining what work they do, even though the underlying ERP could function without them. No exclusion criteria apply (no crypto, defense, hardware, or services-firm signals). The only mild tension is that the product is fundamentally an ERP, but the rubric's agent clause explicitly covers this case."
-    },
-    {
-     "model": "deepseek/deepseek-v4-flash",
-     "label": "no",
-     "confidence": 0.9,
-     "reason": "The product is an ERP; AI agents are enhancements, not the core. The homepage does not present the model as the product; it presents an ERP with AI features."
     }
    ]
   },
@@ -2278,5 +2342,5 @@
    ]
   }
  ],
- "updated_at": "2026-11-09T21:05:01+00:00"
+ "updated_at": "2026-11-09T22:39:32+00:00"
 }
