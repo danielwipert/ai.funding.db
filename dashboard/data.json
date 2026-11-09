@@ -1,6 +1,353 @@
 {
  "companies": [
   {
+   "cik": "0002142358",
+   "company_name": "Uncovr, Inc.",
+   "homepage_url": "https://uncovr.ai",
+   "filing_date": "2026-11-06",
+   "amount_sold_usd": 5144983,
+   "state": "NY",
+   "description": "Uncovr develops an AI video-understanding model that turns live surgical video into structured clinical intelligence, automating operative reporting and procedural coding for hospitals and surgeons.",
+   "related_persons": [
+    {
+     "name": "Ines Iraki",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "Johann Diep",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2142358/000123191926001546/",
+   "accession_no": "0001231919-26-001546",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": null,
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "Uncovr builds a video-understanding foundation model that analyzes surgical video in real time to generate operative reports and CPT codes \u2014 the model is the core product. Founders (Ines Iraki, Johann Diep) match the Form D."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The website explicitly states Uncovr is building a 'video-understanding foundation model' and that 'Our models analyze surgery in real time.' The product's core function\u2014generating operative reports and CPT codes from surgical video\u2014is performed by these models. The company describes itself with AI as a lead noun ('uncovr.ai') and the homepage explains what the model does. No exclusion criteria apply (not services, hardware, crypto, or public sector focused). Therefore, it qualifies as an AI company."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0001390066",
+   "company_name": "PHASE CHANGE SOFTWARE LLC",
+   "homepage_url": "https://phasechange.ai",
+   "filing_date": "2026-11-03",
+   "amount_sold_usd": 5996357,
+   "state": "CO",
+   "description": "Phase Change Software builds symbolic AI (knowledge graph) technology that analyzes and decodes enterprise COBOL legacy code, providing verified, traceable understanding of business logic without hallucinations.",
+   "related_persons": [
+    {
+     "name": "JEFFREY DIGGINS",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "DONALD PESKIN",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "MARK BIELER",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "GARY BRACH",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "ELIZABETH RICHARDS",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "HOWARD CULANG",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "BRADFORD CLEAVENGER",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "ALAN KUCHECK",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1390066/000139006626000004/",
+   "accession_no": "0001390066-26-000004",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": null,
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "Phase Change Software's core product (COBOL Colleague) is a symbolic AI knowledge-graph platform whose primary function \u2014 mapping COBOL code into verified business functions \u2014 is performed by the AI model itself. The homepage leads with the AI product and explains what it does. Location and CEO (Gary Brach) match the Form D. Not a services firm, not defense-led, no crypto."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The company explicitly states it is an AI company specializing in symbolic AI, and its product COBOL Colleague relies on a knowledge graph and AI to provide verified understanding of COBOL code. The homepage leads with the AI product and describes what the model does (maps code to business functions with 100% verification). This fits the inclusion criteria: the product would not exist without the AI (symbolic reasoning), and AI is the lead noun. There is no evidence of bolted-on AI, services firm, hardware, crypto, or primary public sector focus. The skeptical case is weak because the company's entire value proposition is based on its AI technology."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0002036427",
+   "company_name": "Minerva BI, Inc.",
+   "homepage_url": "https://minerva.io",
+   "filing_date": "2026-11-03",
+   "amount_sold_usd": 15009998,
+   "state": "NY",
+   "description": "Minerva BI's homepage leads with 'AI for marketing leaders' and describes named agentic systems doing core work: agents that review funnels, draft and activate campaigns, and push measurement reports. Agentic Data Engineer standardizes consumer data. This meets the include criterion of a product whose core function is performed by AI agents with the homepage explaining what they do.",
+   "related_persons": [
+    {
+     "name": "Jackson Engles",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "Daniel Saedi",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Mathew Joseph",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Phineas Barnes",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Morgan Samet",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Jack Moshkovich",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2036427/000203642726000001/",
+   "accession_no": "0002036427-26-000001",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": null,
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.85,
+     "reason": "Named AI agents (analysis, campaign generation, measurement) perform the platform's core marketing tasks; the model is the product, not a bolted-on feature."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The homepage leads with 'AI for marketing leaders' and describes named AI agents (Analysis & Optimization, Campaign Generation & Activation, Measurement & Reporting) that perform core marketing tasks. The product's value proposition is built on AI understanding consumers and automating work, meeting the include criteria. The skeptical case is weak because the website clearly positions AI as the core, not a feature, and there is no evidence of exclusion categories (services, hardware, crypto, public sector). The company name 'BI' is not dispositive given the explicit AI focus."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0001810252",
+   "company_name": "HData, Inc.",
+   "homepage_url": "https://hdata.com",
+   "filing_date": "2026-11-02",
+   "amount_sold_usd": 4100011,
+   "state": "IL",
+   "description": "HData's platform uses multiple LLMs to analyze regulatory filings, with named AI solutions for regulatory research and document intelligence in the energy sector.",
+   "related_persons": [
+    {
+     "name": "Hudson Hollister",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Yuval Lubowich",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "Mithun Banarjee",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Rajesh Choudhary",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "Amy Francetic",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Anthony Mealey",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "John Fein",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1810252/000181025226000002/",
+   "accession_no": "0001810252-26-000002",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": null,
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.8,
+     "reason": "HData sells 'Regulatory AI' \u2014 a product whose core function (finding and analyzing information buried in regulatory filings, grounded LLM analysis of up to 400 files) is performed by multiple LLMs. The homepage describes what the model does; this is document intelligence, not an AI feature bolted onto a workflow tool."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.85,
+     "reason": "Despite the case against, the website explicitly describes 'Regulatory AI' as a named solution and states that 'Powerful AI' with multiple LLMs performs complex analysis of filings, providing detailed citations. The core function of the product\u2014turning regulatory complexity into clarity by analyzing filings\u2014is performed by the AI models, not just by data storage or workflow automation. The homepage explains what the model does (analyze up to 400 files at once, fully grounded, with citations), meeting the rubric's test for a product whose core function is performed by a model. There is no evidence of excluded verticals (services, hardware, crypto, public sector focus). Therefore, HData qualifies as an AI company."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0002007484",
+   "company_name": "TrashLab Software Inc.",
+   "homepage_url": "https://trashlab.com",
+   "filing_date": "2026-10-29",
+   "amount_sold_usd": 10699991,
+   "state": "CA",
+   "description": "TrashLab is a waste hauler CRM/dispatch/billing platform, but its homepage substantially features a named AI agent, Haul-E, described as \"the industry's first AI Order Taker\" that answers calls and writes order requests, reads dump tickets via AI Vision, dispatches and routes stops via AI Dispatcher, and answers reporting questions via AI Reporting. This satisfies the inclusion rule for named AI agents performing core jobs with the homepage explaining what the agent does. No exclusion criteria apply (not crypto, not defense-led, not a services firm).",
+   "related_persons": [
+    {
+     "name": "Neil Chaudhary",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "Taijianda Tan",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "Brandon Bryant",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Vinay Kumar",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Ershad Jamil",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2007484/000147083126000964/",
+   "accession_no": "0001470831-26-000964",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": null,
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "Named AI agent Haul-E performs core operational work (order taking, vision-based ticket reading, dispatching, reporting) and the homepage explains what the agent does, not just that AI exists."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The rubric includes a specific criterion for tools where named AI agents perform a core job and the homepage says what work they do, even if the underlying tool would work without them. TrashLab's Haul-E is a named AI agent that performs core jobs: answering calls, writing orders, routing, reporting. The homepage extensively describes what Haul-E does. This criterion is met. The fact that the platform also has non-AI features does not disqualify it. The skeptical case relies on the AI being a feature, but the rubric explicitly allows that as long as the agent is named and does core work. Therefore, the company qualifies as an AI company."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
    "cik": "0001939243",
    "company_name": "Adaptive Real Estate, Inc.",
    "homepage_url": "https://adaptive.build",
@@ -898,6 +1245,292 @@
  ],
  "review": [
   {
+   "cik": "0001778614",
+   "company_name": "Infinite Cooling Inc.",
+   "homepage_url": "https://infinite-cooling.com",
+   "filing_date": "2026-11-06",
+   "amount_sold_usd": 6881500,
+   "state": "MA",
+   "description": "Industrial cooling tower optimization and monitoring technology for data centers, power plants, and industrial facilities.",
+   "related_persons": [
+    {
+     "name": "MAHER DAMAK",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "KRIPA VARANASI",
+     "relationships": [
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "CARMICHAEL ROBERTS",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "MARK LITTLE",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "JEFFREY MCCARTHY",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "KARIM KHALIL",
+     "relationships": [
+      "Executive Officer",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "PHIL COOPER",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1778614/000177861426000006/",
+   "accession_no": "0001778614-26-000006",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "no",
+     "confidence": 0.85,
+     "reason": "Infinite Cooling is an industrial cooling efficiency company (cooling tower optimization, water/energy savings for data centers and power plants). AI appears only as a feature ('AI-driven analytics', 'AI algorithms' in TowerPulse) on a hardware/monitoring product that would function without it. No named AI agents doing a core job, no model as the product."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.7,
+     "reason": "The website prominently features AI algorithms as the core of TowerPulse, with case studies showing that AI-driven scores and recommendations are the key value. The product's core function\u2014optimizing cooling tower efficiency\u2014is performed by the model, meeting the inclusion criterion of a product whose core function is performed by a model. The case against is weak because the AI is not merely a feature list item but the central technology described."
+    }
+   ]
+  },
+  {
+   "cik": "0002161590",
+   "company_name": "Trinity AI Boston, Inc.",
+   "homepage_url": "https://trinityaiboston.com",
+   "filing_date": "2026-11-05",
+   "amount_sold_usd": 6000000,
+   "state": "MA",
+   "description": "Trinity AI Boston develops AI platforms for litigation and claims intelligence, including Cosmos One (litigation intelligence for legal teams, insurers, and enterprises) and Cosmos Nexus (construction-defect litigation defense), applying document intelligence, litigation analytics, and predictive risk modeling.",
+   "related_persons": [
+    {
+     "name": "Jayashankar Nanjundaswamy",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Ganesh Ramamoorthy",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Ed Aguero",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2161590/000216159026000001/",
+   "accession_no": "0002161590-26-000001",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "Trinity AI Boston's homepage leads with AI research, development, and commercialization, and its flagship products (Cosmos One litigation intelligence platform, Cosmos Nexus construction-defect litigation defense) are AI products whose core function \u2014 document intelligence, claims analysis, predictive risk modeling \u2014 is performed by models. The model is the product, satisfying the inclusion criteria."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.7,
+     "reason": "Despite the vagueness, the products are named AI platforms that perform core tasks like reading legal files and building models, which likely rely on ML. The company describes itself with 'AI' as the lead noun and focuses on AI research and commercialization. The services are supplementary, not the primary offering. Thus, it meets the inclusion criteria."
+    }
+   ]
+  },
+  {
+   "cik": "0002163840",
+   "company_name": "Locaition Matters Inc.",
+   "homepage_url": "https://locaitionmatters.com",
+   "filing_date": "2026-11-05",
+   "amount_sold_usd": 1050000,
+   "state": "TX",
+   "description": "Locaition Matters builds Curated Intelligence\u2122, an AI workspace that lets anyone ask location questions in plain English and get cited, map-based location analysis reports (demographics, traffic, competition, zoning, risk) \u2014 effectively an AI agent for GIS.",
+   "related_persons": [
+    {
+     "name": "Matthew S Felton",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2163840/000216384026000001/",
+   "accession_no": "0002163840-26-000001",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "Locaition Matters' product, Curated Intelligence\u2122, is an AI workspace for location decisions: users ask location questions in plain English and the AI performs the core work \u2014 translating questions into spatial data, layer analysis, risk review, and cited report generation. The homepage explicitly says 'We taught AI how to do GIS' and describes what the model does. The core product would not exist without LLMs; this is document/decisioning intelligence, not AI bolted onto an existing tool."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 0.2,
+     "reason": "The homepage repeatedly centers 'location intelligence' and 'GIS', with AI positioned as an enabler rather than the product itself. The core offering is spatial data analysis and reporting, which has existed for decades; the AI adds a plain-English interface but does not define the product's existence. Under the rubric, the product would likely work without the AI layer (e.g., via manual GIS queries), so it fails the 'would not exist without ML/LLM' test. The company's history and partner status further suggest a services orientation."
+    }
+   ]
+  },
+  {
+   "cik": "0002115573",
+   "company_name": "Tremont AI, Inc.",
+   "homepage_url": "https://tremont.ai",
+   "filing_date": "2026-11-04",
+   "amount_sold_usd": 2000000,
+   "state": "MA",
+   "description": "Tremont AI builds and sells foundation models (TRACE, ToxScribe) and AI agents for toxicologic pathology, licensed from Mass General Brigham. The models are the product \u2014 they read tissue slides and describe findings \u2014 which fits the 'builds/trains models' and 'model performs core function' inclusion criteria. It is not drug discovery or biotech itself; it sells AI models and software to pathology teams, so the biotech exclusion does not apply.",
+   "related_persons": [
+    {
+     "name": "Long Phi Le",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2115573/000211557326000002/",
+   "accession_no": "0002115573-26-000002",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.75,
+     "reason": "Homepage leads with foundation models for toxicologic pathology (TRACE vision encoder, ToxScribe vision-language model, correlating agents). The AI models are the core product, not a bolted-on feature, and the company builds them directly. Same-company confidence is high: the Form D company is Tremont AI, Inc., Boston MA, matching the site's copyright line."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 1.0,
+     "reason": "The exclusion is explicit and unambiguous; the company's entire offering is for preclinical drug safety, which is drug discovery."
+    }
+   ]
+  },
+  {
+   "cik": "0002089370",
+   "company_name": "ShelfCycle Inc.",
+   "homepage_url": "https://shelfcycle.com",
+   "filing_date": "2026-11-03",
+   "amount_sold_usd": 4399997,
+   "state": "NY",
+   "description": "AI-native ERP/CRM for chemical distribution with named agents for order entry, voice ordering, hazmat compliance, statement matching, and data analysis.",
+   "related_persons": [
+    {
+     "name": "Michael Harrison",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2089370/000147083126000974/",
+   "accession_no": "0001470831-26-000974",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": "models disagree",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.85,
+     "reason": "ShelfCycle is an ERP/CRM for chemical distribution, but the homepage goes well beyond an 'AI-powered' feature bullet. It ships with named AI agents doing core operational work \u2014 Order Entry ('Reads the PO. Drafts the order.'), Voice Assistant, Hazmat Compliance Copilot, Statement Match, Data Analyst, SC Intelligence \u2014 each with a stated job, plus an 'agent-ready API' and document/voice order entry where the model drafts orders for human approval. This matches the include rule for tools where named AI agents perform a core job with the homepage explaining what work they do, even though the underlying ERP could function without them. No exclusion criteria apply (no crypto, defense, hardware, or services-firm signals). The only mild tension is that the product is fundamentally an ERP, but the rubric's agent clause explicitly covers this case."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 0.9,
+     "reason": "The product is an ERP; AI agents are enhancements, not the core. The homepage does not present the model as the product; it presents an ERP with AI features."
+    }
+   ]
+  },
+  {
+   "cik": "0002161388",
+   "company_name": "Idaptiq Trials Inc.",
+   "homepage_url": "https://idaptiq.com",
+   "filing_date": "2026-11-02",
+   "amount_sold_usd": 2790000,
+   "state": "MI",
+   "description": "Idaptiq Trials is a clinical trial software company whose core product is an end-to-end biostatistics automation platform that uses AI to generate and connect core regulatory biostatistics deliverables (SAP, SDTM, ADaM, TLFs), with automated dependency detection for protocol amendments.",
+   "related_persons": [
+    {
+     "name": "Sandra Ferber Brine",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "Nathaniel Fox",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2161388/000123191926001520/",
+   "accession_no": "0001231919-26-001520",
+   "first_seen": "2026-11-09",
+   "last_updated": "2026-11-09",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.75,
+     "reason": "The homepage's core product is end-to-end biostatistics automation \u2014 generating SAP, SDTM, ADaM specs/code and TLFs \u2014 and the company describes itself as using AI to perform that core function (eliminating manual biostatistics work). This is a software company serving drug development, not a biotech/drug-discovery company itself; its product's core function (document/code generation and dependency-aware automation) is performed by the model. Not a services firm, no crypto, no public-sector/defense lead."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 0.85,
+     "reason": "The evidence strongly indicates that AI is not the core of the product; the platform automates biostatistics tasks without relying on LLMs or named models, and the homepage leads with automation rather than AI."
+    }
+   ]
+  },
+  {
    "cik": "0002161171",
    "company_name": "SpartanX Technologies, Inc.",
    "homepage_url": "https://spartanx.ai",
@@ -1643,5 +2276,5 @@
    ]
   }
  ],
- "updated_at": "2026-10-30T00:20:42+00:00"
+ "updated_at": "2026-11-09T03:41:48+00:00"
 }
