@@ -864,6 +864,65 @@
    "note": ""
   },
   {
+   "cik": "0002052031",
+   "company_name": "RapidCanvas Inc",
+   "homepage_url": "https://rapidcanvas.ai",
+   "filing_date": "2026-10-14",
+   "amount_sold_usd": 28999988,
+   "state": "TX",
+   "description": "RapidCanvas sells an agentic AI platform for enterprise AI transformation: AI agents execute workflows governed by human experts, with a core ",
+   "related_persons": [
+    {
+     "name": "Rahul Pangam",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Uttam Phalnikar",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Dinesh Katiyar",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Piyush Kharbanda",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2052031/000205203126000006/",
+   "accession_no": "0002052031-26-000006",
+   "first_seen": "2026-10-29",
+   "last_updated": "2026-10-29",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.85,
+     "reason": "RapidCanvas sells an agentic AI platform \u2014 its core product is AI agents executing enterprise workflows (Context Engine, AI apps, agent-executed processes). The model is the product, not a bolt-on feature; the company self-describes as an AI platform. This is a clear include under the rubric."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "uncertain",
+     "confidence": 0.6,
+     "reason": "Hybrid approach includes human expertise, making it unclear if primary product is platform or services."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
    "cik": "0001977208",
    "company_name": "Optain Health, Inc.",
    "homepage_url": "https://optainhealth.com",
@@ -1822,63 +1881,6 @@
    ]
   },
   {
-   "cik": "0002052031",
-   "company_name": "RapidCanvas Inc",
-   "homepage_url": "https://rapidcanvas.ai",
-   "filing_date": "2026-10-14",
-   "amount_sold_usd": 28999988,
-   "state": "TX",
-   "description": "RapidCanvas sells an agentic AI platform for enterprise AI transformation: AI agents execute workflows governed by human experts, with a core ",
-   "related_persons": [
-    {
-     "name": "Rahul Pangam",
-     "relationships": [
-      "Executive Officer",
-      "Director"
-     ]
-    },
-    {
-     "name": "Uttam Phalnikar",
-     "relationships": [
-      "Executive Officer",
-      "Director"
-     ]
-    },
-    {
-     "name": "Dinesh Katiyar",
-     "relationships": [
-      "Director"
-     ]
-    },
-    {
-     "name": "Piyush Kharbanda",
-     "relationships": [
-      "Director"
-     ]
-    }
-   ],
-   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2052031/000205203126000006/",
-   "accession_no": "0002052031-26-000006",
-   "first_seen": "2026-10-29",
-   "last_updated": "2026-10-29",
-   "review_reason": "a model was uncertain",
-   "homepage_match": "strong",
-   "verdicts": [
-    {
-     "model": "z-ai/glm-5.3",
-     "label": "yes",
-     "confidence": 0.85,
-     "reason": "RapidCanvas sells an agentic AI platform \u2014 its core product is AI agents executing enterprise workflows (Context Engine, AI apps, agent-executed processes). The model is the product, not a bolt-on feature; the company self-describes as an AI platform. This is a clear include under the rubric."
-    },
-    {
-     "model": "deepseek/deepseek-v4-flash",
-     "label": "uncertain",
-     "confidence": 0.6,
-     "reason": "Hybrid approach includes human expertise, making it unclear if primary product is platform or services."
-    }
-   ]
-  },
-  {
    "cik": "0001854445",
    "company_name": "Brightline Interactive, Inc./NV  (BTLN)",
    "homepage_url": "https://brightlineinteractive.com",
@@ -2276,5 +2278,5 @@
    ]
   }
  ],
- "updated_at": "2026-11-09T03:41:48+00:00"
+ "updated_at": "2026-11-09T21:05:01+00:00"
 }
