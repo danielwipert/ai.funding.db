@@ -9,6 +9,7 @@ Usage:
 
 import argparse
 import re
+import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -17,7 +18,29 @@ from pipeline.models import Filing
 
 SEARCH_URL = "https://efts.sec.gov/LATEST/search-index"
 PAGE_SIZE = 100  # EDGAR returns at most 100 hits per page
+SEARCH_TRIES = 3  # tries per page when EDGAR's reply has no "hits"
 RUNS_DIR = Path(__file__).resolve().parent.parent / "runs"
+
+
+def search_page(params: dict, tries: int = SEARCH_TRIES) -> dict:
+    """Return one page of search results (the "hits" part of EDGAR's reply).
+
+    EDGAR sometimes answers 200 OK with a body that has no "hits" (the
+    2026-11-02 weekly run died on one). Status-code retries in edgar.py
+    don't catch that, so wait and ask again here.
+    """
+    for attempt in range(1, tries + 1):
+        reply = get_json(SEARCH_URL, params)
+        if "hits" in reply:
+            return reply["hits"]
+        if attempt < tries:
+            wait = 5 * 2 ** (attempt - 1)  # 5s, then 10s
+            print(f"EDGAR reply had no results for {params['startdt']} (try {attempt}); retrying in {wait}s")
+            time.sleep(wait)
+    raise SystemExit(
+        f"EDGAR search for {params['startdt']} gave no results after {tries} tries. "
+        f"Last reply: {str(reply)[:300]}"
+    )
 
 
 def pull_day(day: date) -> list[dict]:
@@ -35,7 +58,7 @@ def pull_day(day: date) -> list[dict]:
             "enddt": day.isoformat(),
             "from": len(hits),
         }
-        page = get_json(SEARCH_URL, params)["hits"]
+        page = search_page(params)
         hits.extend(page["hits"])
         if not page["hits"] or len(hits) >= page["total"]["value"]:
             return hits
