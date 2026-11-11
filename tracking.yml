@@ -1,9 +1,13 @@
-# Outreach tracking, edited by hand. One entry per company, keyed on CIK.
-# The pipeline reads this file and merges it into dashboard/data.json,
-# but it never writes to it.
+# Outreach tracking. One entry per company, keyed on CIK. Edit by hand, or
+# use the dashboard's "Mark contacted" button (it opens a GitHub issue; the
+# contacted.yml workflow then updates this file). The weekly pipeline only
+# reads this file and never writes it.
 #
 # Example:
 #
 # "0001234567":
 #   contacted: true
 #   note: "Sent LinkedIn message 11/3, referenced Refund Gate"
+
+"0001939243":
+  contacted: true
