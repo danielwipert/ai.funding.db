@@ -1,6 +1,227 @@
 {
  "companies": [
   {
+   "cik": "0002159740",
+   "company_name": "Metabody Holdings Inc.",
+   "homepage_url": "https://metabody.ai",
+   "filing_date": "2026-11-13",
+   "amount_sold_usd": 5000000,
+   "state": "UT",
+   "description": "Metabody offers continuous, clinician-led metabolic health care combining licensed providers in all 50 states with Aria, an AI co-clinician that interprets wearable, lab, and clinical data in a closed-loop platform.",
+   "related_persons": [
+    {
+     "name": "Carl Christensen",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Austin Walters",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Craig Weston",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "William Matthew Hall",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2159740/000215974026000001/",
+   "accession_no": "0002159740-26-000001",
+   "first_seen": "2026-11-16",
+   "last_updated": "2026-11-16",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "Metabody.ai (West Valley City, UT, matching the Form D filer) sells a closed-loop metabolic care platform whose core is a named AI agent, Aria, described as an 'AI co-clinician' that continuously reads patient data, surfaces what matters, drafts visit-ready summaries, and prepares clinical decisions. The homepage explains in detail what the model does \u2014 this is model-as-core-product, not a bolted-on feature. It is a healthcare/telehealth product, but the AI agent performs a core job, satisfying the include criteria."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "Despite the argument that AI is a feature, the rubric explicitly includes companies that sell a tool where a named AI agent performs a core job and the homepage describes what that agent does. Metabody's 'Aria' is a named AI co-clinician that continuously reads data, surfaces insights, and prepares clinical decisions. The homepage clearly explains Aria's role, meeting the inclusion criteria. The product would not be the same without this AI-driven interpretation, and the company is not a services firm, hardware, crypto, or public-sector focused. Therefore, it qualifies as an AI company."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0002164566",
+   "company_name": "Arcophos, Inc.",
+   "homepage_url": "https://arcophos.com",
+   "filing_date": "2026-11-10",
+   "amount_sold_usd": 3510000,
+   "state": "CA",
+   "description": "Research lab building AI-native healthcare systems: operates clinics as Clinical Deployment Environments, converts visits into de-identified episodes to train and evaluate clinical AI models, and publishes clinical benchmark indices of frontier models.",
+   "related_persons": [
+    {
+     "name": "Ryan Harris Anderson",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Benjamin Yu Shi",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "Aneesh Iyer",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2164566/000216456626000002/",
+   "accession_no": "0002164566-26-000002",
+   "first_seen": "2026-11-16",
+   "last_updated": "2026-11-16",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.93,
+     "reason": "Arcophos describes itself as a research lab for AI-native healthcare systems. Its core work is building clinical benchmarks (clinicalbenchmarks.ai, Health Optimization Bench), running a Clinical Deployment Environment whose episodes are designed to train and evaluate models, and producing datasets/RL environments/safety evaluations. The model layer is the product core \u2014 this fits 'builds or trains models / evals / data infrastructure' and 'core function performed by a model.' It is a healthcare services + research operation, not drug discovery or biotech, so the wrong-lane exclusion doesn't apply."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.8,
+     "reason": "Sells evaluation infrastructure (benchmarks, datasets) for AI models, core to product."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0002006375",
+   "company_name": "Newton Research, Inc.",
+   "homepage_url": "https://newton.ai",
+   "filing_date": "2026-11-09",
+   "amount_sold_usd": 17899859,
+   "state": "MA",
+   "description": "Newton Research sells a team of AI agents for marketing analytics \u2014 agents connect data, write code, execute workflows (reporting, measurement, anomaly detection, yield management). Named agents performing core work; the product would not exist without ML/LLMs.",
+   "related_persons": [
+    {
+     "name": "John Hoctor",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Matthew Emans",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Kent Bennett",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Ian Sigalow",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Sanja Partalo",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "David Eisenberg",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2006375/000200637526000001/",
+   "accession_no": "0002006375-26-000001",
+   "first_seen": "2026-11-16",
+   "last_updated": "2026-11-16",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "Include: named AI agents perform the core job (marketing analytics workflows), homepage explains what the model does, benchmarks vs. leading LLMs."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "Homepage sells named AI agents performing core marketing analytics tasks; model is the product."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0002060763",
+   "company_name": "Litewave.AI, Inc",
+   "homepage_url": "https://litewave.ai",
+   "filing_date": "2026-11-09",
+   "amount_sold_usd": 1525000,
+   "state": "CA",
+   "description": "Litewave.AI sells an AI platform for quality and manufacturing compliance in regulated industries (pharma, food, cosmetics). Its core products \u2014 Litewave Digitize (domain-trained document AI that reads handwritten/scanned batch records) and Litewave Comply (AI agents acting as digital QA reviewers checking records against specs and regulations) \u2014 are model-performed functions. The homepage explains in detail what the models do: handwriting recognition, document intelligence, compliance checking, root-cause analysis. This is document intelligence and AI agents doing the core job, not AI bolted onto a workflow tool.",
+   "related_persons": [
+    {
+     "name": "Anil Kumar Chandrupatla",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2060763/000206076326000006/",
+   "accession_no": "0002060763-26-000006",
+   "first_seen": "2026-11-16",
+   "last_updated": "2026-11-16",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "The product's core function (batch record review, deviation investigation, compliance checking) is performed by domain-trained AI models and named AI agents; the homepage describes what the model does in depth. Meets the 'core function performed by a model' and 'named AI agents doing a core job' criteria. No disqualifying features: not a services firm, not hardware/biotech, no crypto, no defense focus."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "The website clearly describes a product whose core function is performed by AI models: domain-trained AI for handwriting recognition, AI agents that review records against specifications, and a 'Manufacturing Memory' that improves over time. The homepage leads with 'AI for Quality & Manufacturing' and explains what the models do (e.g., 'Litewave applies your master record... then gives QA a review-by-exception file'). This meets the inclusion criteria of selling a product whose core function is performed by a model and describing itself with 'AI' as the lead noun. The deployment engineer is a standard implementation service, not a consulting firm. No excluded verticals (hardware, crypto, public sector focus) are present. Therefore, it is an AI company under the rubric."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
    "cik": "0002142358",
    "company_name": "Uncovr, Inc.",
    "homepage_url": "https://uncovr.ai",
@@ -1444,6 +1665,170 @@
  ],
  "review": [
   {
+   "cik": "0002134212",
+   "company_name": "Electra Vehicles, Inc.",
+   "homepage_url": "https://electravehicles.com",
+   "filing_date": "2026-11-12",
+   "amount_sold_usd": 3500000,
+   "state": "MA",
+   "description": "",
+   "related_persons": [
+    {
+     "name": "Fabrizio Martini",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Nicholas Chakalos",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2134212/000213421226000001/",
+   "accession_no": "0002134212-26-000001",
+   "first_seen": "2026-11-16",
+   "last_updated": "2026-11-16",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.03,
+     "reason": "Electra's core product is the EVE-AI software platform \u2014 battery fleet analytics, predictive SoH estimation, fault detection, and adaptive BMS controls. The homepage describes AI performing the core jobs (SoH estimation with 0.34% error, AI-driven lifetime optimization, adaptive control), not just as a feature. This is AI/ML analytics and decisioning software for batteries, not hardware or biotech; no exclusions apply."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The homepage describes AI as the core product ('AI Brain for Batteries') with named agents performing optimization and monitoring."
+    }
+   ]
+  },
+  {
+   "cik": "0001986769",
+   "company_name": "Site Technologies, Inc.",
+   "homepage_url": "https://sitetechnologies.io",
+   "filing_date": "2026-11-10",
+   "amount_sold_usd": 1904054,
+   "state": "IL",
+   "description": "AI/ML-enabled facility intelligence platform for commercial property portfolio assessment \u2014 automated condition scoring, lifecycle forecasting, and AI-verified inventory for roofing, pavement, facade, and landscaping.",
+   "related_persons": [
+    {
+     "name": "Gary Austin Rabine",
+     "relationships": [
+      "Executive Officer",
+      "Director",
+      "Promoter"
+     ]
+    },
+    {
+     "name": "Gary Thomas Rabin",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Charlie Walker",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1986769/000198676926000001/",
+   "accession_no": "0001986769-26-000001",
+   "first_seen": "2026-11-16",
+   "last_updated": "2026-11-16",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.85,
+     "reason": "SITE Technologies' core product is an AI property assessment platform: the homepage leads with 'AI Property Assessment Platform' and describes what the models do \u2014 objective condition index scores, lifecycle forecasting, AI-verified asset inventory, and named AI add-ons (Inventory AI, Striping AI). The core function (automated facility condition assessment replacing manual inspections) is performed by the model, satisfying the 'core function performed by a model' criterion. Location and leadership match the Form D (Chicago, IL). No exclusion criteria apply."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.75,
+     "reason": "Product's core function (property condition assessment) is performed by AI models per homepage description."
+    }
+   ]
+  },
+  {
+   "cik": "0001888693",
+   "company_name": "DegreeSight Inc",
+   "homepage_url": "https://degreesight.com",
+   "filing_date": "2026-11-09",
+   "amount_sold_usd": 1000000,
+   "state": "TX",
+   "description": "DegreeSight is a transfer credit platform for higher education. Its core product is document intelligence: DocSight Transcript OCR reads transcripts with 99% accuracy, and Inbound/Insight perform automated credit matching and degree audit mapping \u2014 the model performs the core job of evaluating and matching transfer credits, not a bolted-on feature.",
+   "related_persons": [
+    {
+     "name": "David Cook",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Drew Melendres",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Woody Robertson",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "Scott Chamberlain",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Daniel Skaggs",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Jeremy Skaggs",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1888693/000188869326000003/",
+   "accession_no": "0001888693-26-000003",
+   "first_seen": "2026-11-16",
+   "last_updated": "2026-11-16",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.7,
+     "reason": "The core function \u2014 reading transcripts and matching credits to pathways \u2014 is performed by models (OCR/document intelligence, a system that 'learns over time' to answer credit inquiries). This is document intelligence and decisioning, not a CRM with an AI feature list item."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 0.8,
+     "reason": "AI (OCR) is a feature, not core product; no named AI agent"
+    }
+   ]
+  },
+  {
    "cik": "0001778614",
    "company_name": "Infinite Cooling Inc.",
    "homepage_url": "https://infinite-cooling.com",
@@ -2342,5 +2727,5 @@
    ]
   }
  ],
- "updated_at": "2026-11-11T17:01:36+00:00"
+ "updated_at": "2026-11-16T22:15:05+00:00"
 }

@@ -1,0 +1,65 @@
+{
+ "run_id": "2026-11-16",
+ "filings_pulled": 1122,
+ "parse_errors": 0,
+ "passed_filter": 66,
+ "filter_drops": {
+  "industry group": 915,
+  "amount sold": 139,
+  "amendment": 2
+ },
+ "with_homepage": 41,
+ "final": {
+  "drop": 58,
+  "review": 3,
+  "ship": 5
+ },
+ "shipped": [
+  "Newton Research, Inc.",
+  "Litewave.AI, Inc",
+  "Arcophos, Inc.",
+  "Arcophos, Inc.",
+  "Metabody Holdings Inc."
+ ],
+ "review": [
+  "DegreeSight Inc",
+  "Site Technologies, Inc.",
+  "Electra Vehicles, Inc."
+ ],
+ "no_homepage_found": [
+  "NOAH Purple Rain Ltd Liability Co",
+  "Belle Meade Spirits, LLC",
+  "Hondo Group, LLC",
+  "RICH RISING GROUP, INC",
+  "Oberon Technology Holdings Inc.",
+  "Authentica Group, Inc.",
+  "BARKSDALE RESOURCES CORP.  (BRKCF)",
+  "Telos Artifex LLC",
+  "Gaingels Path Robotics SEP 2026 LLC",
+  "Play Operating Systems, Inc.",
+  "M&O/Lowcountry Nexton Mob, LLC",
+  "Palomma Holdings Ltd",
+  "Gamehaus Holdings Inc.  (GMHS)",
+  "NV Gold Corp  (NVGLF)",
+  "GR Holdings, LLC",
+  "fal - Features & Labels, Inc.",
+  "R7 Technologies, Inc.",
+  "Trybe Tech Inc.",
+  "Aerial Illuminations, Inc.",
+  "Redwagon Systems Inc.",
+  "East Coast SPV, LLC",
+  "CDS Investment LLC",
+  "Hockey Parent Holdings, L.P.",
+  "Zapotal Club, LLC",
+  "Kunin Technologies Inc."
+ ],
+ "dashboard_changes": {
+  "sent to review": 3,
+  "companies added": 4,
+  "amounts raised": 1
+ },
+ "tavily_searches": 95,
+ "tavily_cost_usd_if_paid": 0.76,
+ "model_cost_usd": 0.0777,
+ "runtime_minutes": 16.9
+}
