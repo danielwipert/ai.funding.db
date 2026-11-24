@@ -1,6 +1,153 @@
 {
  "companies": [
   {
+   "cik": "0001886670",
+   "company_name": "Ennabl, Inc.",
+   "homepage_url": "https://ennabl.ai",
+   "filing_date": "2026-11-20",
+   "amount_sold_usd": 2000000,
+   "state": "CT",
+   "description": "Ennabl AI is an AI assistant for insurance brokers that connects to AMS/CRM systems, reads policies, loss runs, and submissions, and automates renewal prep, policy checking, coverage gap analysis, ACORD form prefill, and proposal generation, writing results back to the AMS after human approval.",
+   "related_persons": [
+    {
+     "name": "Kabir Syed",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Eric Reiner",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Jim Hackbarth",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Martha Notaras",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Jack Butcher",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Anton Chudinovskikh",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1886670/000188667026000001/",
+   "accession_no": "0001886670-26-000001",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": null,
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The Form D company (Ennabl, Inc., Greenwich, CT) matches the website ennabl.ai, which is focused exclusively on insurance brokerage solutions. The homepage leads with 'AI assistant for insurance brokers' and describes 'Ennabl AI' as the core product: 'AI that sits on top of your systems, anticipates the next step and automates the work.' The core functions \u2014 policy checking with cited changes, loss run summarization, coverage gap review, ACORD application prefill, submission intake and market matching \u2014 are document intelligence and generation tasks performed by the model, and the homepage explains in detail what the AI does. This is not a feature-list mention of AI on a product that would work without it; the AI is the product. No exclusion criteria apply (not a services firm, no crypto, no defense focus)."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "The website explicitly brands the product as 'Ennabl AI' and 'AI assistant for insurance brokers,' describing specific AI-driven tasks (policy checking, loss-run summaries, coverage gap review) that are core to the product's value. The homepage explains what the model does in detail, and the product would not exist without ML/LLMs to perform these complex document and data analyses. There is no evidence of excluded categories (services, hardware, crypto, public sector focus). Therefore, Ennabl qualifies as an AI company under the rubric."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
+   "cik": "0001662695",
+   "company_name": "nPhase, Inc.",
+   "homepage_url": "https://nphase.ai",
+   "filing_date": "2026-11-18",
+   "amount_sold_usd": 15000000,
+   "state": "FL",
+   "description": "nPhase.ai is an AI-native clinical research data platform for life sciences, combining UDMS (a real-time unified data management system integrating 70+ clinical data sources) with SCE, an AI-powered statistical computing environment that automates SDTM mapping, ADaM dataset generation, TLF creation, Pinnacle 21 validation with auto-remediation, EHR-to-CDISC code translation, SAS-to-R migration, and CSR compilation \u2014 governed with GxP-native, 21 CFR Part 11 compliance and human-in-the-loop review.",
+   "related_persons": [
+    {
+     "name": "Scott Climes",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Mark Lama",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Alan Bentley",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Ben Walton",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Levi Malik",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Trygve Mikkelsen",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Jaya Prakash Rao",
+     "relationships": [
+      "Executive Officer"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1662695/000166269526000002/",
+   "accession_no": "0001662695-26-000002",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": null,
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.8,
+     "reason": "The Form D company (nPhase, Inc., Atlantic Beach, FL) matches the website owner (nPhase, Inc., 1015 Atlantic Blvd, Atlantic Beach, FL; compliance@nphase.ai). nPhase qualifies as an AI company under the rubric. Its newly launched core product, the SCE, is explicitly positioned as 'the first purpose-built, AI-native Statistical Computing Environment for life sciences,' and the homepage describes in concrete terms what the models do: automated SDTM mapping across 59 domains with '88%+ auto-mapping accuracy, trainable to 99% per customer deployment,' a 'clinical language model' translating EHR codes to CDISC standards, SAS-to-R conversion with clinical domain awareness, automated ADaM/TLF generation, and auto-CSR generation. These are core functions of the product (generation, document intelligence, translation) performed by models, not a bolted-on 'AI-powered insights' line item \u2014 the company even details model behavior (trainable accuracy, human-in-the-loop exception review, immutable snapshots of AI outputs). It is a software/SaaS platform for clinical data management, not a biotech or drug-discovery firm, so the biotech exclusion does not apply. The only hesitation: the UDMS data-fabric half of the platform would function without AI, and the company is a decade-old clinical data vendor rebranding around AI \u2014 but the 2026 flagship offering and the stated basis of the raise are the AI-native SCE, which meets the 'core function performed by a model' test."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.8,
+     "reason": "The homepage prominently features an AI-native Statistical Computing Environment (SCE) whose core function\u2014automated SDTM mapping, ADaM generation, and TLF creation\u2014is performed by a model. The company describes itself as an 'AI-Native Clinical Data Platform' and explains what the model does (e.g., '88%+ auto-mapping accuracy'). This meets the inclusion criteria: the product's core function is performed by a model, and AI is the lead descriptor. The case against is weak because the SCE would not exist without ML, and the platform's AI capabilities are integral, not merely a feature list item."
+    }
+   ],
+   "contacted": false,
+   "note": ""
+  },
+  {
    "cik": "0002159740",
    "company_name": "Metabody Holdings Inc.",
    "homepage_url": "https://metabody.ai",
@@ -1129,7 +1276,7 @@
    "company_name": "Zeely, Inc.",
    "homepage_url": "https://zeely.ai",
    "filing_date": "2026-10-16",
-   "amount_sold_usd": 2091993,
+   "amount_sold_usd": 17061538,
    "state": "DE",
    "description": "Zeely is an agentic AI platform for creating, launching, and scaling paid ads \u2014 text and product photos become AI-generated creatives and campaigns.",
    "related_persons": [
@@ -1147,10 +1294,10 @@
      ]
     }
    ],
-   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2155182/000215518226000002/",
-   "accession_no": "0002155182-26-000002",
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2155182/000215518226000003/",
+   "accession_no": "0002155182-26-000003",
    "first_seen": "2026-10-29",
-   "last_updated": "2026-10-29",
+   "last_updated": "2026-11-24",
    "review_reason": null,
    "homepage_match": "weak",
    "verdicts": [
@@ -1664,6 +1811,382 @@
   }
  ],
  "review": [
+  {
+   "cik": "0002163334",
+   "company_name": "MAPLE PRIVACY LABS, INC.",
+   "homepage_url": "https://privacypick.com",
+   "filing_date": "2026-11-20",
+   "amount_sold_usd": 5368887,
+   "state": "TX",
+   "description": "Maple is an AI chat and research workspace whose core product is model access: it deploys open-weight LLMs itself inside a privacy architecture (device-side encryption, hardware-isolated TEE enclave). The model is the product, not a bolted-on feature. The provided URL (privacypick.com) is a third-party privacy tool review site that covers Maple, not Maple's own homepage \u2014 the product description comes from the search snippet. Note the site's crypto wallet reviews are unrelated (no crypto angle for Maple itself).",
+   "related_persons": [
+    {
+     "name": "Mark Suman",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Anthony Ronning",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Nick Efstratis",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2163334/000216333426000001/",
+   "accession_no": "0002163334-26-000001",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": "models disagree",
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.85,
+     "reason": "Primary product is AI chat built on LLMs the company itself deploys \u2014 model access is the core of the product (include per rubric: 'sells model access' / core function performed by a model). Website may not be the company's own homepage."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 0.85,
+     "reason": "The evidence lacks the company\u2019s own homepage, which is essential per the rubric. The third-party review site and search snippet are insufficient to confirm that Maple\u2019s product would not exist without ML/LLMs or that the model is the core of the product. Therefore, the case against holds, and the label is 'no'."
+    }
+   ]
+  },
+  {
+   "cik": "0001848714",
+   "company_name": "THORO, INC.",
+   "homepage_url": "https://thoro.ai",
+   "filing_date": "2026-11-19",
+   "amount_sold_usd": 4000000,
+   "state": "PA",
+   "description": "Autonomy software stack with proprietary vision models enabling industrial vehicles to navigate and operate autonomously.",
+   "related_persons": [
+    {
+     "name": "PATRICK J MONDI",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "DANIEL BEAVEN",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "JOHN BARES",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "DAN ROSSKAMM",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1848714/000184871426000004/",
+   "accession_no": "0001848714-26-000004",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.75,
+     "reason": "Core product is an AI autonomy stack (proprietary vision models, perception, SLAM) sold to OEMs; software, not robotics hardware."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 0.95,
+     "reason": "Excluded as robotics company per rubric."
+    }
+   ]
+  },
+  {
+   "cik": "0002157976",
+   "company_name": "Jota Holdings Ltd.",
+   "homepage_url": "https://jota.ai",
+   "filing_date": "2026-11-19",
+   "amount_sold_usd": 25334277,
+   "state": "D5",
+   "description": "",
+   "related_persons": [
+    {
+     "name": "Davi de Holanda Rocha",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Marcelo Leite Soares Pereira da Silva",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Oleg Olegovich Balev",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Onsi Sawiris",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Diogo Monica",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2157976/000215797626000001/",
+   "accession_no": "0002157976-26-000001",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": "a model was uncertain",
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "uncertain",
+     "confidence": 0.85,
+     "reason": "The homepage centers on \"AI\"/\"agente de IA\" but the product is a WhatsApp-based fintech/payment account (Pix, card payments, Brazilian Central Bank-regulated payment account); AI is the lead noun of the product description but the underlying fintech would work without it, making it borderline under the rubric."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.9,
+     "reason": "The homepage clearly presents the product as an AI agent ('Seu agente pessoal proativo de IA') that performs core financial tasks (Pix, bill payment, reminders, etc.) via conversation. The AI is not a minor feature; it is the primary way users interact and the company's lead value proposition. The domain jota.ai and funding from AI-focused investors reinforce this. While the company offers financial services, the product's core function\u2014conversational financial management\u2014depends on the AI model. This meets the inclusion criteria: the product would not exist without the model, and the homepage describes what the model does."
+    }
+   ]
+  },
+  {
+   "cik": "0001658448",
+   "company_name": "Ursa Space Systems Inc.",
+   "homepage_url": "https://ursaspace.com",
+   "filing_date": "2026-11-17",
+   "amount_sold_usd": 12100000,
+   "state": "NY",
+   "description": "Decisioning",
+   "related_persons": [
+    {
+     "name": "Adam Maher",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Julie Baker",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "Mark Snell",
+     "relationships": [
+      "Executive Officer"
+     ]
+    },
+    {
+     "name": "Christopher Steed",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "William Porteous",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Paul Graziani",
+     "relationships": [
+      "Director"
+     ]
+    },
+    {
+     "name": "Daniel Freedman",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/1658448/000165844826000002/",
+   "accession_no": "0001658448-26-000002",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.85,
+     "reason": "Ursa Space Systems' core product is satellite intelligence delivered by its GeoAI technology: 'Describe your objective. Our GeoAI technology breaks your question into measurable indicators, selects from multi-modal satellite and geospatial sources, and delivers a verified insights report.' The homepage explains what the model does (query decomposition, source selection, anomaly/change detection, forecasting), which fits the rubric for a product whose core function is performed by a model (detection, decisioning, generation of insight reports). The website is clearly the same company \u2014 Ithaca, NY matches the Form D, and press releases reference Ursa Space Systems in Ithaca. While Global Security is a major customer segment (NGA, U.S. Space Force), the Commercial segment is presented equally as a main focus, so the defense-lead exclusion does not apply."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 0.6,
+     "reason": "The case against is plausible but weak. The website clearly leads with 'geospatial AI' and describes a system that uses AI to break down questions into indicators and deliver insights, which suggests the model is core. The company also serves commercial clients, not just defense. The AI is not a bolted-on feature; it is the mechanism for automated analysis. However, the skeptical argument that this is traditional geospatial analytics with an AI label has some merit, but the rubric's inclusion criteria (describing itself with AI as lead noun, product core function performed by model) are met. The uncertainty arises from the possibility that the AI is a thin layer on top of data integration. Given the evidence, I lean toward 'yes' but with moderate confidence."
+    }
+   ]
+  },
+  {
+   "cik": "0002112989",
+   "company_name": "Broccoli Intelligence, Inc.",
+   "homepage_url": "https://broccoli.com",
+   "filing_date": "2026-11-17",
+   "amount_sold_usd": 23999989,
+   "state": "CA",
+   "description": "Broccoli sells AI voice agents/CSRs for home service businesses \u2014 answering calls, booking jobs, dispatching, QA, outbound calling. The homepage details named agents (Brenda AI CSR, Sean AI Sales Agent, etc.) performing core business functions, meeting the 'named AI agents doing a core job' criterion. Not a disqualifying lane (services firm, hardware, crypto, defense).",
+   "related_persons": [
+    {
+     "name": "Abhishek Jain",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Aditya Ketkar",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "Samir Kaul",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2112989/000211298926000002/",
+   "accession_no": "0002112989-26-000002",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": "a model was uncertain",
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "uncertain",
+     "confidence": 0.09,
+     "reason": ""
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.95,
+     "reason": "The homepage clearly describes an AI platform for home services with multiple named AI agents (Brenda, Amy, Mark, etc.) that perform core jobs like answering calls, booking jobs, and sales. The product's core function is performed by these AI agents, and the company describes itself with 'AI' as the lead noun. No disqualifying factors (services firm, hardware, crypto, public sector) are present. The evidence strongly supports inclusion under the rubric."
+    }
+   ]
+  },
+  {
+   "cik": "0002150140",
+   "company_name": "Gamow Labs, Inc.",
+   "homepage_url": "https://gamowlabs.com",
+   "filing_date": "2026-11-17",
+   "amount_sold_usd": 10000000,
+   "state": "CO",
+   "description": "Gamow Labs builds frontier AI systems that interpret the human genome, running a robotic wet lab in Boulder, CO and benchmarking AI agents on genomics and lab tasks.",
+   "related_persons": [
+    {
+     "name": "Daniel McKinnon",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2150140/000215014026000003/",
+   "accession_no": "0002150140-26-000003",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": "models disagree",
+   "homepage_match": "strong",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.8,
+     "reason": "Gamow Labs' homepage leads with 'builds frontier AI systems to interpret the human genome' \u2014 the model is the core product. They publish AI agent benchmarks (ScreenBench, LabRobotBench), push frontier models in genomics, and use a robotic wet lab to support model training. While the company touches biology and drug repurposing research, it is not a biotech or drug-discovery pipeline as its primary business \u2014 it is an AI interpretation layer for genomic medicine, which fits the rubric (core function performed by a model: genomic interpretation, decisioning, agents). Slight hesitation: the wet-lab and drug-repurposing work could be read as a biotech lane, but the homepage frames AI systems as the product and the lab as infrastructure, so the evidence supports inclusion."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "no",
+     "confidence": 0.95,
+     "reason": "The company's activities fall under biotech/drug discovery, which is a disqualifying vertical per the rubric. Even though they build AI systems, the exclusion is clear and overrides any inclusion criteria."
+    }
+   ]
+  },
+  {
+   "cik": "0002163236",
+   "company_name": "Tabi Tech Inc",
+   "homepage_url": "https://tabiconnect.com",
+   "filing_date": "2026-11-16",
+   "amount_sold_usd": 2999998,
+   "state": "FL",
+   "description": "Tabi Connect provides AI-powered truckload freight pricing and quoting automation for logistics brokers, delivering instant rate quotes via API.",
+   "related_persons": [
+    {
+     "name": "Ricardo Gonzalez",
+     "relationships": [
+      "Executive Officer",
+      "Director"
+     ]
+    },
+    {
+     "name": "McGinley Francis Joel",
+     "relationships": [
+      "Director"
+     ]
+    }
+   ],
+   "edgar_url": "https://www.sec.gov/Archives/edgar/data/2163236/000216323626000001/",
+   "accession_no": "0002163236-26-000001",
+   "first_seen": "2026-11-24",
+   "last_updated": "2026-11-24",
+   "review_reason": "a model was under the confidence floor",
+   "homepage_match": "weak",
+   "verdicts": [
+    {
+     "model": "z-ai/glm-5.3",
+     "label": "yes",
+     "confidence": 0.7,
+     "reason": "Tabi Connect's core product is automated freight pricing \u2014 it prices every truckload quote in seconds, which is a forecasting/decisioning function. The homepage leads with 'AI Powered Truckload Pricing' as the product's headline, and the product's entire value proposition (instant, accurate rate quotes at scale) depends on the pricing model. This fits the rubric: the model performs the core function, not a bolted-on feature."
+    },
+    {
+     "model": "deepseek/deepseek-v4-flash",
+     "label": "yes",
+     "confidence": 0.8,
+     "reason": "The homepage explicitly leads with 'AI Powered Truckload Pricing Strategy' and describes the core function as pricing every request in seconds using a strategy built by brokers. This meets the rubric's inclusion criterion: the company describes itself with 'AI' as a lead noun of the product, and the homepage explains what the model does (automated pricing). There is no evidence of exclusions (services, hardware, crypto, public sector). While a skeptical case exists, the available evidence supports classification as an AI company."
+    }
+   ]
+  },
   {
    "cik": "0002134212",
    "company_name": "Electra Vehicles, Inc.",
@@ -2727,5 +3250,5 @@
    ]
   }
  ],
- "updated_at": "2026-11-16T22:15:05+00:00"
+ "updated_at": "2026-11-24T00:12:24+00:00"
 }

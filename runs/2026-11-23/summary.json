@@ -1,0 +1,73 @@
+{
+ "run_id": "2026-11-23",
+ "filings_pulled": 1311,
+ "parse_errors": 0,
+ "passed_filter": 77,
+ "filter_drops": {
+  "industry group": 1132,
+  "amount sold": 99,
+  "amendment": 3
+ },
+ "with_homepage": 47,
+ "final": {
+  "drop": 66,
+  "review": 9,
+  "ship": 2
+ },
+ "shipped": [
+  "nPhase, Inc.",
+  "Ennabl, Inc."
+ ],
+ "review": [
+  "Tabi Tech Inc",
+  "Tabi Tech Inc",
+  "Ursa Space Systems Inc.",
+  "Broccoli Intelligence, Inc.",
+  "Gamow Labs, Inc.",
+  "THORO, INC.",
+  "Jota Holdings Ltd.",
+  "Zeely, Inc.",
+  "MAPLE PRIVACY LABS, INC."
+ ],
+ "no_homepage_found": [
+  "JB FUND LLC",
+  "Ponchi, LLC",
+  "inHarmony Interactive Holdings, Inc.",
+  "Superfoods, Inc.",
+  "Levering Holdings, Inc.",
+  "POP Family Investors, LLC",
+  "JoyWork Inc.",
+  "Araico Corp",
+  "Balanced Body Organics, Inc.",
+  "EPB3, LLC",
+  "EPB4, LLC",
+  "HoneyHive Inc.",
+  "Spakl Tech, Inc.",
+  "Cosmos Fund LLC",
+  "LGL Co-Lending Fund 1 LLC",
+  "Sav Technologies Inc.",
+  "BHI Mack LP",
+  "Indranet Inc.",
+  "GlassHat AI, Inc.",
+  "Battery Mineral Resources Corp.",
+  "Extend Enterprises, Inc.",
+  "International Environmental Standards, PBC",
+  "SEG Wheel Holdings, LLC",
+  "Takara Ventures Ltd.",
+  "Strategic AI Private Opportunities LLC",
+  "TIS Invesco, LP",
+  "Raymond Thomas Holdings, Inc.",
+  "NIMBLE PRECISION, INC.",
+  "General Inference Inc.",
+  "Tendrils Compute Corp"
+ ],
+ "dashboard_changes": {
+  "sent to review": 7,
+  "companies added": 2,
+  "amounts raised": 1
+ },
+ "tavily_searches": 112,
+ "tavily_cost_usd_if_paid": 0.896,
+ "model_cost_usd": 0.0878,
+ "runtime_minutes": 23.1
+}
